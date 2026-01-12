@@ -1,0 +1,42 @@
+/**
+ * Open Audio Protocol Color Palette - Black & White Theme
+ *
+ */
+:root {
+  --font-family: "Terminus", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  
+  --background: #000000;
+
+  --primary: #ffffff;
+  --primary-dark-1: #e0e0e0;
+  --primary-dark-2: #c0c0c0;
+  --primary-light-1: #ffffff;
+  --primary-light-2: #ffffff;
+
+  --secondary: #808080;
+  --secondary-transparent: rgba(128, 128, 128, 0.85);
+  --secondary-dark-1: #707070;
+  --secondary-dark-2: #606060;
+  --secondary-light-1: #909090;
+  --secondary-light-2: #a0a0a0;
+
+  --neutral: #ffffff;
+  --neutral-dark-1: #e0e0e0;
+  --neutral-dark-2: #c0c0c0;
+  --neutral-dark-3: #a0a0a0;
+  --neutral-light-1: #808080;
+  --neutral-light-2: #606060;
+  --neutral-light-3: #404040;
+  --neutral-light-4: #303030;
+  --neutral-light-5: #202020;
+  --neutral-light-6: #181818;
+  --neutral-light-7: #101010;
+  --neutral-light-8: #080808;
+  --neutral-light-9: #050505;
+  --neutral-light-10: #030303;
+  --white: #ffffff;
+  --static-white: #ffffff;
+  --darkmode-static-white: #ffffff;
+
+  --skeleton: #1a1a1a;
+}

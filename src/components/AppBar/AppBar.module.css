@@ -1,0 +1,182 @@
+.appBar {
+  height: 48px;
+  width: 100%;
+  max-width: 1440px;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.left {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--unit-4);
+  justify-content: space-between;
+}
+
+.right {
+  gap: var(--unit-8);
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo {
+  width: 40px;
+}
+
+.logo path {
+  fill: var(--static-white);
+}
+
+.name {
+  flex-wrap: wrap;
+}
+
+/* Right Nav */
+
+/* User Account Snippet */
+.snippetContainer {
+  display: inline-flex;
+  gap: var(--unit-2);
+  align-items: center;
+}
+
+.userNameContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--unit-1);
+}
+
+.user {
+  gap: var(--unit-2);
+  display: flex;
+  align-items: center;
+}
+
+.snippetImg {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.snippetText {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 160px;
+
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: var(--static-white);
+  text-shadow: 0px 16px 20px rgba(36, 36, 56, 0.15);
+  margin-right: 24px;
+}
+
+.userSnippetLabel {
+  font-weight: 700;
+  font-size: 11px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--static-white);
+  opacity: 0.8;
+  text-shadow: 0px 16px 20px rgba(36, 36, 56, 0.15);
+  margin: 1px 0px;
+}
+
+.userNameText {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--unit-1);
+  font-size: var(--font-m);
+  font-weight: var(--font-medium);
+  color: var(--static-white);
+}
+
+.walletText {
+  font-size: var(--font-s);
+  font-weight: var(--font-medium);
+  color: var(--static-white);
+}
+
+.tokenText {
+  font-size: 16px;
+}
+
+.appBar .launchAppBtn {
+  height: 41px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: var(--static-white) !important;
+  padding-right: var(--unit-3);
+  padding-left: var(--unit-3);
+  box-shadow: 0px 16px 20px rgba(36, 36, 56, 0.15);
+  border-radius: 8px;
+  transform: perspective(1px) scale3d(1, 1, 1) !important;
+}
+
+.appBar .launchAppBtn:hover {
+  box-shadow: 0px 10px 10px rgba(36, 36, 56, 0.2) !important;
+  background: var(--static-white) !important;
+  transform: perspective(1px) scale3d(1.04, 1.04, 1.04) !important;
+}
+
+.appBar .launchAppBtn:active {
+  background: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0px 3px 3px rgba(36, 36, 56, 0.1) !important;
+  transform: perspective(1px) scale3d(1, 1, 1) !important;
+}
+
+.appBar .launchAppBtnText {
+  font-weight: var(--font-bold) !important;
+  font-size: var(--font-s) !important;
+  text-align: center;
+  color: #000000 !important;
+}
+
+.launchAppBtnIcon {
+  margin-right: var(--unit-1) !important;
+}
+
+.launchAppBtnIcon path {
+  fill: #000000 !important;
+}
+
+.connectWalletContainer {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 0px;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.misconfiguredDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 8px;
+  background-color: #f15064;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  transition: background-color 500ms linear;
+}
+
+.connectText {
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  font-size: var(--font-xs);
+  line-height: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--static-white);
+}
+
+.loadingText {
+  opacity: 0.7;
+}

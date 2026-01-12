@@ -1,0 +1,18 @@
+/* Stats Container */
+
+.stat {
+  font-family: var(--font-family);
+  font-weight: 900;
+  font-size: 64px;
+  height: 76px;
+  text-align: center;
+  display: inline;
+  background: -webkit-linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.loading {
+  height: var(--unit-3);
+  width: var(--unit-3);
+}

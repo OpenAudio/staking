@@ -1,0 +1,138 @@
+/* User Info Tile */
+
+.userInfo {
+  position: relative;
+  flex: 1;
+  padding: 24px 0px 18px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 202px;
+  justify-content: center;
+}
+
+.externalLinkIcon {
+  position: absolute;
+  right: 18px;
+}
+
+.externalLinkIcon:hover {
+  opacity: 0.8;
+}
+
+.externalLinkIcon:active {
+  opacity: 0.5;
+}
+
+.externalLinkIcon path {
+  fill: var(--neutral);
+}
+
+.userInfoContainer {
+  padding: 18px;
+}
+
+/* Rank */
+.rankContainer {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rankLabel {
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  font-size: var(--font-s);
+  text-align: right;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.5);
+}
+
+.rankValue {
+  font-family: var(--font-family);
+  font-style: normal;
+  font-weight: var(--font-bold);
+  font-size: var(--font-xl);
+
+  color: rgba(255,255,255,0.8);
+}
+
+.imageContainer {
+  display: flex;
+}
+
+.userImg {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+}
+
+.userName,
+.userWallet {
+  font-family: var(--font-family);
+  font-weight: var(--font-regular);
+  text-align: center;
+
+  color: rgba(255,255,255,0.8);
+}
+
+.userName {
+  display: flex;
+  align-items: center;
+  gap: var(--unit-1);
+  font-size: var(--font-m);
+  min-height: var(--font-m);
+  font-weight: var(--font-medium);
+  margin-bottom: 8px;
+}
+
+.userWallet {
+  font-size: var(--font-s);
+  margin-bottom: 24px;
+}
+
+.buttonContainer {
+  position: absolute;
+  top: 24px;
+  left: 20px;
+}
+
+.boxLabel {
+  font-family: Avenir Next LT Pro;
+  font-weight: var(--font-bold);
+  font-size: var(--font-s);
+  line-height: 17px;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 4px;
+}
+
+.boxValue {
+  font-family: Avenir Next LT Pro;
+  font-weight: var(--font-bold);
+  font-size: var(--font-2xl);
+  line-height: 29px;
+  text-align: center;
+  color: rgba(255,255,255,0.8);
+}
+
+.boxName {
+  font-size: var(--font-s);
+}
+
+.boxSpacing {
+  margin-bottom: 16px;
+}
+
+.undelegateButton {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}

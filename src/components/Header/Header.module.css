@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  user-select: none;
+}
+
+.appBarContainer {
+  max-width: 1080px;
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0px 48px;
+  margin: 0px auto;
+  box-sizing: border-box;
+}
+
+.navContainer {
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 0px;
+  margin: 0px auto;
+}

@@ -1,0 +1,63 @@
+.container {
+  min-height: 103px;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 11px 52px 12px 32px;
+  box-sizing: border-box;
+  color: var(--neutral);
+}
+
+.container.onClick {
+  cursor: pointer;
+}
+
+.container.onClick:hover {
+  background: #000000;
+}
+
+.header {
+  text-transform: uppercase;
+  font-family: Avenir Next LT Pro;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: var(--font-xl);
+  line-height: 26px;
+}
+
+.executed {
+  margin-top: 16px;
+  font-weight: 500;
+  font-size: var(--font-xs);
+  line-height: 12px;
+}
+
+.proposalEvent {
+  padding-top: 11px !important;
+  padding-bottom: 12px !important;
+}
+
+.titleContainer {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.titleSpacingRight {
+  margin-right: 6px;
+}
+
+.titleSpacingLeft {
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.userWalletName:hover {
+  color: var(--secondary);
+}

@@ -1,0 +1,433 @@
+
+[37;40mnpm[0m [0m[30;43mWARN[0m [0m[35mignoring workspace config at /Users/ray/Documents/audius/audius-protocol/packages/protocol-dashboard/.npmrc[0m 
+[0m
+> @audius/protocol-dashboard@0.1.13 build
+> NODE_OPTIONS=--max_old_space_size=8192 tsc -p ./tsconfig.node.json && vite build
+
+[36mvite v4.5.0 [32mbuilding for production...[36m[39m
+[2K[1Gtransforming (1) [2mindex.html[22m[2K[1Gtransforming (3) [2msrc/index.tsx[22m[2K[1Gtransforming (19) [2m../../node_modules/@audius/stems/dist/avenir.css[22m[2K[1G../../node_modules/@tanstack/react-query-devtools/build/modern/index.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query-devtools/build/modern/index.js" was ignored.
+[2K[1Gnode_modules/@web3modal/ethers/dist/esm/exports/react.js (1:0) Module level directives cause errors when bundled, "use client" in "node_modules/@web3modal/ethers/dist/esm/exports/react.js" was ignored.
+[2K[1Gtransforming (58) [2msrc/utils/mobile.ts[22m[2K[1G../../node_modules/@tanstack/react-query/build/modern/useQuery.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useQuery.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useQueries.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useQueries.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useSuspenseQuery.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useSuspenseQuery.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useSuspenseInfiniteQuery.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useSuspenseInfiniteQuery.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useSuspenseQueries.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useSuspenseQueries.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useMutation.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useMutation.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useMutationState.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useMutationState.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useIsFetching.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useIsFetching.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/useInfiniteQuery.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useInfiniteQuery.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/isRestoring.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/isRestoring.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query-devtools/build/modern/ReactQueryDevtoolsPanel.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query-devtools/build/modern/ReactQueryDevtoolsPanel.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query-devtools/build/modern/ReactQueryDevtools.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query-devtools/build/modern/ReactQueryDevtools.js" was ignored.
+[2K[1Gtransforming (118) [2m../harmony/dist/components/layout/Paper/Paper.js[22m[2K[1Gtransforming (155) [2m../harmony/dist/components/loading-spinner/LoadingSpinner.js[22m[2K[1Gtransforming (175) [2m../harmony/dist/hooks/useMediaQueryListener.js[22m[2K[1Gtransforming (194) [2msrc/containers/API/API.tsx[22m[2K[1Gtransforming (228) [2m../../node_modules/@tanstack/query-core/build/modern/infiniteQueryObserver.js[22m[2K[1G../../node_modules/@tanstack/react-query/build/modern/useBaseQuery.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/useBaseQuery.js" was ignored.
+[2K[1G../../node_modules/@tanstack/react-query/build/modern/errorBoundaryUtils.js (1:0) Module level directives cause errors when bundled, "use client" in "../../node_modules/@tanstack/react-query/build/modern/errorBoundaryUtils.js" was ignored.
+[2K[1Gtransforming (283) [2mnode_modules/@web3modal/scaffold-utils/dist/esm/src/EthersConstantsUtil.js[22m[2K[1Gtransforming (328) [2m../harmony/node_modules/@juggle/resize-observer/lib/exports/resize-observer.js[22m[2K[1Gtransforming (344) [2m../harmony/dist/components/progress-bar/ProgressBar.module.css.js[22m[2K[1Gtransforming (362) [2m../harmony/dist/assets/icons/CalendarDay.svg.js[22m[2K[1Gtransforming (381) [2m../harmony/dist/assets/icons/CloudUpload.svg.js[22m[2K[1Gtransforming (401) [2m../harmony/dist/assets/icons/Foundation.svg.js[22m[2K[1Gtransforming (420) [2m../harmony/dist/assets/icons/MessageBlock.svg.js[22m[2K[1Gtransforming (441) [2m../harmony/dist/assets/icons/PodcastForward.svg.js[22m[2K[1Gtransforming (461) [2m../harmony/dist/assets/icons/Shuffle.svg.js[22m[2K[1Gtransforming (481) [2m../harmony/dist/assets/icons/Trending.svg.js[22m[2K[1Gtransforming (501) [2m../harmony/dist/assets/icons/VolumeLevel3.svg.js[22m[2K[1Gtransforming (516) [2m../harmony/dist/assets/icons/Discord.svg.js[22m[2K[1Gtransforming (536) [2m../harmony/dist/utils/createImageIcon.js[22m[2K[1Gtransforming (556) [2m../harmony/dist/assets/icons/ccND.svg.js[22m[2K[1Gtransforming (576) [2m../harmony/dist/assets/icons/fileM4R.svg.js[22m[2K[1Gtransforming (604) [2m../harmony/dist/assets/icons/iconPlaybackRate1_5x.svg.js[22m[2K[1Gtransforming (620) [2msrc/components/RewardsCTABanner/index.tsx[22m[2K[1Gtransforming (669) [2m../../node_modules/@apollo/client/core/Reobserver.js[22m[2K[1Gtransforming (725) [2m../../node_modules/@apollo/client/utilities/observables/iteration.js[22m[2K[1Gtransforming (793) [2msrc/store/cache/votes/hooks.ts[22m[2K[1Gtransforming (843) [2mnode_modules/@web3modal/wallet/dist/esm/src/W3mFrame.js[22m[2K[1Gtransforming (975) [2m../harmony/node_modules/react-use/esm/useFirstMountState.js[22m[2K[1Gtransforming (1022) [2m../../node_modules/lottie-web/build/player/lottie.js[22m[2K[1Gtransforming (1024) [2msrc/components/InfoTooltip/InfoTooltips.tsx[22m[2K[1Gtransforming (1047) [2m../../node_modules/react-markdown/lib/uri-transformer.js[22m[2K[1Gtransforming (1075) [2mnode_modules/@web3modal/scaffold/dist/esm/src/modal/w3m-button/styles.js[22m[BABEL] Note: The code generator has deoptimised the styling of /Users/ray/Documents/audius/audius-protocol/packages/libs/dist/web-libs.js as it exceeds the max of 500KB.
+[2K[1G[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/packages/libs/dist/web-libs.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/packages/libs/dist/web-libs.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m [33m(x2)[39m
+[2K[1Gtransforming (1130) [2mnode_modules/@web3modal/scaffold/dist/esm/src/partials/w3m-activity-list/styles.js[22m[2K[1Gtransforming (1183) [2m../../node_modules/@walletconnect/sign-client/dist/index.es.js[22m[2K[1Gtransforming (1201) [2m../../node_modules/@coinbase/wallet-sdk/dist/provider/DiagnosticLogger.js[22m[2K[1Gtransforming (1252) [2mnode_modules/react-spring/renderprops.js[22m[2K[1Gtransforming (1307) [2m../../node_modules/graphql/jsutils/Path.mjs[22m[2K[1Gtransforming (1396) [2msrc/services/Audius/governance/governance.ts[22m[2K[1Gtransforming (1476) [2mnode_modules/@web3modal/scaffold/dist/esm/src/utils/w3m-email-otp-widget/styles.js[22m[2K[1Gtransforming (1479) [2m../libs/node_modules/hashids/esm/hashids.js[22m[2K[1Gtransforming (1484) [2m__vite-browser-external[22m[2K[1G[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/node-localstorage/LocalStorage.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/node-localstorage/LocalStorage.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m [33m(x2)[39m
+[2K[1G[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/xmlhttprequest/lib/XMLHttpRequest.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/xmlhttprequest/lib/XMLHttpRequest.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m [33m(x2)[39m
+[2K[1Gtransforming (1491) [2m../spl/dist/esm/index.js[22m[BABEL] Note: The code generator has deoptimised the styling of /Users/ray/Documents/audius/audius-protocol/packages/sdk/dist/index.browser.esm.js as it exceeds the max of 500KB.
+[2K[1Gtransforming (1509) [2msrc/utils/format.ts[22m[2K[1Gtransforming (1650) [2m../../node_modules/@stablelib/constant-time/lib/constant-time.js[22m[2K[1Gtransforming (1688) [2msrc/components/ConnectMetaMaskModal/MisconfiguredModal.tsx[22m[2K[1Gtransforming (1710) [2msrc/assets/img/iconValidationCheck.svg[22m[2K[1Gtransforming (1753) [2mnode_modules/ethers/lib.esm/wordlists/lang-en.js[22m[2K[1Gtransforming (1780) [2m../../node_modules/@walletconnect/jsonrpc-utils/dist/esm/env.js[22m[2K[1Gtransforming (1864) [2m../../node_modules/lodash/isArray.js[22m[2K[1Gtransforming (2066) [2mnode_modules/@web3modal/ui/dist/esm/src/layout/wui-grid/styles.js[22m[2K[1Gtransforming (2088) [2mnode_modules/lit-html/directive.js[22m[2K[1Gtransforming (2123) [2m../../node_modules/@solana/spl-token/lib/esm/actions/index.js[22m[2K[1Gtransforming (2149) [2m../spl/dist/esm/layout-utils.js[22m[2K[1Gtransforming (2176) [2mnode_modules/dayjs/plugin/duration.js[22m[2K[1Gtransforming (2226) [2m../../node_modules/uint8arrays/esm/src/alloc.js[22m[2K[1Gtransforming (2296) [2msrc/components/ConfirmTransactionModal/ConfirmTransactionModal.tsx[22m[2K[1Gtransforming (2363) [2m../../node_modules/react-virtualized/dist/es/utils/createCallbackMemoizer.js[22m[2K[1Gtransforming (2451) [2m../../node_modules/@web3modal/common/dist/esm/src/utils/DateUtil.js[22m[2K[1Gtransforming (2517) [2m../../node_modules/@web3modal/ui/dist/esm/src/composites/wui-wallet-image/index.js[22m[2K[1Gtransforming (2598) [2m../../node_modules/@solana/web3.js/node_modules/@noble/curves/esm/abstract/utils.js[22m[2K[1Gtransforming (2650) [2m../common/src/store/account/index.ts[22m[2K[1Gtransforming (2700) [2m../../node_modules/web3-eth-abi/node_modules/underscore/underscore.js[22m[2K[1Gtransforming (2779) [2m../../node_modules/@solana/spl-token/lib/esm/state/account.js[22m[2K[1G[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/graceful-fs/graceful-fs.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/graceful-fs/graceful-fs.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m [33m(x2)[39m
+[2K[1Gtransforming (2823) [2m../../node_modules/viem/_esm/clients/transports/http.js[22m[2K[1Gtransforming (2972) [2m../../node_modules/snake-case/dist.es2015/index.js[22m[2K[1Gtransforming (3048) [2mnode_modules/ethers/lib.esm/wordlists/bit-reader.js[22m[2K[1Gtransforming (3147) [2m../../node_modules/json-rpc-engine/dist/createAsyncMiddleware.js[22m[2K[1Gtransforming (3250) [2m../../node_modules/@web3modal/ui/node_modules/lit/index.js[22m[2K[1Gtransforming (3451) [2m../../node_modules/minimalistic-assert/index.js[22m[2K[1Gtransforming (3515) [2m../../node_modules/is-hex-prefixed/src/index.js[22m[2K[1Gtransforming (3523) [2m../common/src/store/account/sagas.ts[22m[2K[1Gtransforming (3544) [2m../common/src/store/lineup/reducer.ts[22m[2K[1Gtransforming (3567) [2m../common/src/store/pages/track/actions.ts[22m[2K[1Gtransforming (3590) [2m../../node_modules/redux-persist/es/index.js[22m[2K[1Gtransforming (3637) [2m../../node_modules/bip39/src/wordlists/japanese.json[22m[2K[1Gtransforming (3728) [2m../../node_modules/available-typed-arrays/index.js[22m[2K[1Gtransforming (3781) [2m../../node_modules/viem/_esm/actions/public/createContractEventFilter.js[22m[2K[1Gtransforming (3955) [2m../../node_modules/viem/_esm/actions/test/setStorageAt.js[22m[2K[1G[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/strtok3/lib/FsPromise.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[1m[33m[plugin:vite:resolve][39m[22m [33mModule "fs" has been externalized for browser compatibility, imported by "/Users/ray/Documents/audius/audius-protocol/node_modules/strtok3/lib/FsPromise.js". See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m [33m(x2)[39m
+[2K[1Gtransforming (4079) [2m../../node_modules/multiformats/esm/src/bases/base64.js[22m[2K[1Gtransforming (4191) [2m../../node_modules/@coinbase/wallet-sdk/dist/relay/walletlink/ui/components/icons/SafeIcon.js[22m[2K[1Gtransforming (4281) [2m../../node_modules/hash.js/lib/hash/utils.js[22m[2K[1Gtransforming (4325) [2m../common/src/api/index.ts[22m[2K[1Gtransforming (4362) [2m../../node_modules/ethereumjs-common/dist/chains/ropsten.json[22m[2K[1Gtransforming (4434) [2m../../node_modules/function-bind/implementation.js[22m[2K[1Gtransforming (4472) [2m../../node_modules/viem/_esm/experimental/eip7702/utils/recoverAuthorizationAddress.js[22m[2K[1Gtransforming (4509) [2m../../node_modules/viem/node_modules/@noble/hashes/esm/_u64.js[22m[2K[1Gtransforming (4539) [2m../common/src/store/pages/deactivate-account/slice.ts[22m[2K[1Gtransforming (4571) [2m../../node_modules/moment/src/moment.js[22m[2K[1Gtransforming (4584) [2m../../node_modules/@coinbase/wallet-sdk/node_modules/@metamask/utils/dist/collections.js[22m[2K[1Gtransforming (4667) [2m../common/src/store/ui/modals/reducers.ts[22m[2K[1Gtransforming (4708) [2m../common/src/store/ui/buy-sell/useTokenAmountFormatting.ts[22m[2K[1Gtransforming (4720) [2m../common/src/models/Track.ts[22m[2K[1Gtransforming (4733) [2m../common/src/models/BadgeTier.ts[22m[2K[1Gtransforming (4808) [2m../common/src/api/tan-query/collection/useCollectionFavorites.ts[22m[2K[1Gtransforming (4840) [2m../common/src/api/tan-query/lineups/useProfileTracks.ts[22m[2K[1Gtransforming (4981) [2m../../node_modules/lodash-es/isArguments.js[22m[2K[1Gtransforming (5151) [2m../../node_modules/lodash-es/stubString.js[22m[2K[1Gtransforming (5317) [2m../../node_modules/fast-safe-stringify/index.js[22m[2K[1Gtransforming (5356) [2m../../node_modules/@redux-saga/is/dist/redux-saga-is.esm.js[22m[2K[1Gtransforming (5360) [2m../common/src/api/tan-query/wallets/useAudioBalance.ts[22m[2K[1Gtransforming (5374) [2m../common/src/services/remote-config/types.ts[22m[2K[1Gtransforming (5425) [2m../../node_modules/peek-readable/lib/Deferred.js[22m[2K[1Gtransforming (5554) [2m../../node_modules/lodash-es/_castArrayLikeObject.js[22m[2K[1Gtransforming (5764) [2m../common/src/hooks/useTikTokAuth.ts[22m[2K[1Gtransforming (5839) [2m../common/src/hooks/useAudioRewards.ts[22m[2K[1Gtransforming (5919) [2m../../node_modules/dayjs/plugin/timezone.js[22m[2K[1Gtransforming (6102) [2m../common/src/api/tan-query/lineups/useLineupQuery.ts[22m[2K[1Gtransforming (6216) [2m../../node_modules/moment/src/lib/locale/set.js[22m[2K[1Gtransforming (6487) [2m../common/src/hooks/purchaseContent/validation.ts[22m[2K[1Gtransforming (6603) [2m../../node_modules/@safe-global/protocol-kit/node_modules/ethereumjs-util/dist.browser/externals.js[22m[2K[1Gtransforming (6612) [2m../common/src/types/fxa-common-password-list/index.d.ts[22m[2K[1Gtransforming (6741) [2m../../node_modules/moment/src/lib/create/from-object.js[22m[2K[1Gtransforming (6806) [2m../../node_modules/@safe-global/protocol-kit/dist/src/adapters/web3/contracts/SignMessageLib/v1.3.0/SignMessageLibContract_V1_3_0_Web3.js[22m[2K[1Gtransforming (6846) [2m../../node_modules/@safe-global/safe-deployments/dist/assets/v1.4.1/safe.json[22m[2K[1Gtransforming (7048) [2m../common/src/schemas/sign-on/pickHandleSchema.ts[22m[2K[1Gtransforming (7087) [2m../sdk/src/sdk/api/generated/full/apis/CidDataApi.ts[22m[2K[1Gtransforming (7095) [2m../sdk/src/sdk/api/generated/full/apis/TracksApi.ts[22m[2K[1Gtransforming (7103) [2m../../node_modules/core-js/internals/is-pure.js[22m[2K[1Gtransforming (7151) [2m../../node_modules/@safe-global/protocol-kit/node_modules/ethers/lib.commonjs/constants/addresses.js[22m[2K[1Gtransforming (7186) [2m../../node_modules/@safe-global/protocol-kit/node_modules/ethers/lib.commonjs/utils/uuid.js[22m[2K[1Gtransforming (7358) [2m../sdk/src/sdk/api/generated/full/models/ClaimableRewardNotificationActionData.ts[22m[2K[1Gtransforming (7601) [2m../../node_modules/ethereum-cryptography/node_modules/@noble/hashes/_u64.js[22m[2K[1Gtransforming (7724) [2m../../node_modules/@safe-global/protocol-kit/node_modules/aes-js/lib.commonjs/mode-cfb.js[22m[2K[1Gtransforming (8089) [2m../../node_modules/eth-sig-util/node_modules/ethereumjs-util/dist/secp256k1-lib/index.js[22m[2K[1Gtransforming (8198) [2m../../node_modules/@safe-global/safe-deployments/node_modules/semver/internal/identifiers.js[22m[2K[1Gtransforming (8242) [2m../sdk/src/sdk/api/generated/full/models/FanRemixContestEndingSoonNotificationAction.ts[22m[2K[1Gtransforming (8953) [2m../sdk/src/sdk/api/generated/full/models/FanRemixContestWinnersSelectedNotification.ts[22m[2K[1Gtransforming (9093) [2m../sdk/src/sdk/api/generated/full/models/TrackAddedToPlaylistNotification.ts[22m[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G../../node_modules/lottie-web/build/player/lottie.js (17016:32) Use of eval in "../../node_modules/lottie-web/build/player/lottie.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+../../node_modules/lottie-web/build/player/lottie.js (17016:32) Use of eval in "../../node_modules/lottie-web/build/player/lottie.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+[2K[1G../../node_modules/file-type/core.js (1419:16) Use of eval in "../../node_modules/file-type/core.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+../../node_modules/file-type/core.js (1419:16) Use of eval in "../../node_modules/file-type/core.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+[2K[1G../../node_modules/@protobufjs/inquire/index.js (12:18) Use of eval in "../../node_modules/@protobufjs/inquire/index.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+../../node_modules/@protobufjs/inquire/index.js (12:18) Use of eval in "../../node_modules/@protobufjs/inquire/index.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+[2K[1G../sdk/dist/browser-15461226.js (1419:16) Use of eval in "../sdk/dist/browser-15461226.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+../sdk/dist/browser-15461226.js (1419:16) Use of eval in "../sdk/dist/browser-15461226.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+[2K[1G[32m✓[39m 9148 modules transformed.
+[2K[1Grendering chunks (1)...[2K[1Grendering chunks (2)...[2K[1Grendering chunks (3)...[2K[1Grendering chunks (4)...[2K[1Grendering chunks (5)...[2K[1Grendering chunks (6)...[2K[1Grendering chunks (7)...[2K[1Grendering chunks (8)...[2K[1Grendering chunks (9)...[2K[1G[1m[33m[plugin:vite:reporter][39m[22m [33m
+(!)  /Users/ray/Documents/audius/audius-protocol/node_modules/crypto-browserify/index.js?commonjs-es-import is dynamically imported by /Users/ray/Documents/audius/audius-protocol/packages/libs/dist/web-libs.js but also statically imported by /Users/ray/Documents/audius/audius-protocol/node_modules/@noble/secp256k1/lib/esm/index.js, /Users/ray/Documents/audius/audius-protocol/packages/libs/dist/web-libs.js, /Users/ray/Documents/audius/audius-protocol/packages/sdk/dist/index.browser.esm.js, dynamic import will not move module into another chunk.
+[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[1m[33m[plugin:vite:reporter][39m[22m [33m
+(!)  /Users/ray/Documents/audius/audius-protocol/node_modules/crypto-browserify/index.js?commonjs-es-import is dynamically imported by /Users/ray/Documents/audius/audius-protocol/packages/libs/dist/web-libs.js but also statically imported by /Users/ray/Documents/audius/audius-protocol/node_modules/@noble/secp256k1/lib/esm/index.js, /Users/ray/Documents/audius/audius-protocol/packages/libs/dist/web-libs.js, /Users/ray/Documents/audius/audius-protocol/packages/sdk/dist/index.browser.esm.js, dynamic import will not move module into another chunk.
+[39m [33m(x2)[39m
+[2K[1Grendering chunks (10)...[2K[1G[2K[1Gcomputing gzip size (0)...[2K[1Gcomputing gzip size (1)...[2K[1Gcomputing gzip size (2)...[2K[1Gcomputing gzip size (3)...[2K[1Gcomputing gzip size (4)...[2K[1Gcomputing gzip size (5)...[2K[1Gcomputing gzip size (6)...[2K[1Gcomputing gzip size (7)...[2K[1Gcomputing gzip size (8)...[2K[1Gcomputing gzip size (9)...[2K[1Gcomputing gzip size (10)...[2K[1Gcomputing gzip size (11)...[2K[1Gcomputing gzip size (12)...[2K[1G[2mdist/[22m[32mindex.html                                          [39m[1m[2m     1.02 kB[22m[1m[22m[2m │ gzip:     0.60 kB[22m
+[2mdist/[22m[2massets/[22m[32mimageCollectiblePlaceholder2x-175e58df.webp  [39m[1m[2m     4.65 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[32mimageCoverPhotoBlank-96325c77.jpg            [39m[1m[2m    32.40 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[32mapiLogo-0469fcdb.png                         [39m[1m[2m    43.86 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[32mImageAudiusApp@2x-8e5568f3.webp              [39m[1m[2m    64.68 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[32mapiBanner-1aa9da29.webp                      [39m[1m[2m    80.76 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[32mWhatIsAudiusBackground@2x-66925a15.jpg       [39m[1m[2m   201.80 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[32mapiBanner@2x-69df93ad.webp                   [39m[1m[2m   213.40 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[32mheaderImg@2x-d03cc14b.jpg                    [39m[1m[2m   502.03 kB[22m[1m[22m
+[2mdist/[22m[2massets/[22m[35mindex-fe513761.css                           [39m[1m[2m   611.84 kB[22m[1m[22m[2m │ gzip:   392.61 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-7dd91337.js                            [39m[1m[2m     1.96 kB[22m[1m[22m[2m │ gzip:     0.88 kB[22m
+[2mdist/[22m[2massets/[22m[36mccip-5e00315a.js                             [39m[1m[2m     2.54 kB[22m[1m[22m[2m │ gzip:     1.23 kB[22m
+[2mdist/[22m[2massets/[22m[36mXMLHttpRequest-26866329.js                   [39m[1m[2m     6.93 kB[22m[1m[22m[2m │ gzip:     2.83 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-41c703df.js                            [39m[1m[2m    12.77 kB[22m[1m[22m[2m │ gzip:     4.75 kB[22m
+[2mdist/[22m[2massets/[22m[36mLocalStorage-57dcb632.js                     [39m[1m[2m    29.46 kB[22m[1m[22m[2m │ gzip:    11.12 kB[22m
+[2mdist/[22m[2massets/[22m[36mbrowser-15461226-30cfc594.js                 [39m[1m[2m    35.75 kB[22m[1m[22m[2m │ gzip:    10.59 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-c1e249a7.js                            [39m[1m[2m   114.38 kB[22m[1m[22m[2m │ gzip:    34.42 kB[22m
+[2mdist/[22m[2massets/[22m[36mpasswordListLazyLoader-f1e70efe.js           [39m[1m[2m   173.82 kB[22m[1m[22m[2m │ gzip:    84.14 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-a3f3f07d.js                            [39m[1m[33m   670.81 kB[39m[22m[2m │ gzip:   188.97 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-5b79ad36.js                            [39m[1m[33m11,281.67 kB[39m[22m[2m │ gzip: 2,926.71 kB[22m
+[33m
+(!) Some chunks are larger than 500 kBs after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 34.95s[39m

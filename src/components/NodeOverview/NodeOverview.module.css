@@ -1,0 +1,92 @@
+.container {
+  flex: 1;
+  min-width: 227px;
+  padding: 24px;
+  display: inline-flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 240px;
+}
+
+.loading {
+  margin: 42px auto 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.serviceType {
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  font-size: var(--font-2xl);
+
+  color: rgba(255,255,255,0.8);
+}
+
+.deregistered {
+  font-family: var(--font-family);
+  font-style: normal;
+  font-weight: var(--font-bold);
+  font-size: var(--font-s);
+  line-height: 17px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #f15064;
+  margin-left: 22px;
+}
+
+.version {
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  font-size: var(--font-s);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-left: 24px;
+}
+
+.descriptor {
+  margin-bottom: 24px;
+}
+
+.descriptor:last-child {
+  margin-bottom: 0px;
+}
+
+.label {
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  font-size: var(--font-s);
+  line-height: 17px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+
+.value {
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  font-size: var(--font-xl);
+
+  color: rgba(255,255,255,0.8);
+}
+
+.textWithIcon {
+  display: flex;
+  align-items: center;
+  max-width: 1080px;
+}
+
+.textWithIcon > .icon {
+  margin-right: 8px;
+  display: flex;
+}

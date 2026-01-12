@@ -1,0 +1,19 @@
+.section {
+  margin-bottom: 16px;
+  display: flex;
+  margin-left: -8px;
+  margin-right: -8px;
+  width: 100%;
+}
+
+.section > * {
+  margin: 0 8px;
+}
+
+.chart {
+  width: 100%;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

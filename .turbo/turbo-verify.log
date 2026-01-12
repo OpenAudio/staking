@@ -1,0 +1,26 @@
+
+[1mnpm[22m [33mwarn[39m [94mconfig[39m ignoring workspace config at /Users/ray/Documents/audius/apps/packages/protocol-dashboard/.npmrc
+
+> @audius/protocol-dashboard@0.1.13 verify
+> concurrently "npm:lint" "npm:lint:env"
+
+[1G[0K[0m[lint:env][0m npm warn config ignoring workspace config at /Users/ray/Documents/audius/apps/packages/protocol-dashboard/.npmrc
+[0m[lint][0m npm warn config ignoring workspace config at /Users/ray/Documents/audius/apps/packages/protocol-dashboard/.npmrc
+[0m[lint][0m 
+[0m[lint][0m > @audius/protocol-dashboard@0.1.13 lint
+[0m[lint][0m > eslint --cache --ext=js,jsx,ts,tsx src
+[0m[lint][0m 
+[0m[lint:env][0m 
+[0m[lint:env][0m > @audius/protocol-dashboard@0.1.13 lint:env
+[0m[lint:env][0m > dotenv-linter --exclude .env.prod.local .env.stage.local
+[0m[lint:env][0m 
+[0m[lint:env][0m Checking .env.prod
+[0m[lint:env][0m Checking .env.stage
+[0m[lint:env][0m 
+[0m[lint:env][0m No problems found
+[0m[lint:env][0m 
+[0m[lint:env][0m A new release of dotenv-linter is available: v3.3.0 -> v4.0.0
+[0m[lint:env][0m https://github.com/dotenv-linter/dotenv-linter/releases/tag/v4.0.0
+[0m[lint:env][0m [0mnpm run lint:env exited with code 0[0m
+[0m[lint][0m [0mnpm run lint exited with code 0[0m
+[1G[0K⠙[1G[0K
