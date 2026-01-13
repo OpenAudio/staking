@@ -8,10 +8,7 @@
   justify-content: flex-start;
   align-items: center;
 
-  background: linear-gradient(180deg, rgba(113, 24, 184, 0.2) 0%, #520d89 100%),
-    url(../../assets/img/headerImg@2x.jpg);
-  background-blend-mode: multiply;
-  /* filter: blur(50px); */
+  background: #000000;
 
   transition: all 0.15s ease-in-out;
   opacity: 0;
@@ -42,16 +39,6 @@
   align-items: center;
 }
 
-.logo {
-  width: 172px;
-  height: 44px;
-  margin-bottom: 24px;
-}
-
-.logo path {
-  fill: var(--static-white);
-}
-
 .name {
   width: 170px;
   text-align: center;
@@ -74,7 +61,7 @@
   width: 100%;
   padding: 8px 24px;
   border: 2px solid var(--static-white);
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .btnContainer .navButton:not(.active):hover {
@@ -83,7 +70,7 @@
 }
 
 .btnContainer .navButton:not(.active):hover .navButtonText {
-  color: #6516a3 !important;
+  color: #000000 !important;
 }
 
 .navButton .navButtonText {
@@ -96,42 +83,7 @@
 }
 
 .btnContainer .navButton.active .navButtonText {
-  color: #6516a3 !important;
-}
-
-.launchAppBtn {
-  margin-top: 80px;
-  height: 41px !important;
-  width: 100% !important;
-  padding: 0px !important;
-  justify-content: center !important;
-  align-items: center !important;
-  background: var(--static-white) !important;
-  box-shadow: 0px 16px 20px rgba(36, 36, 56, 0.15);
-  border-radius: 8px;
-  transform: perspective(1px) scale3d(1, 1, 1) !important;
-}
-
-.launchAppBtn:hover {
-  box-shadow: 0px 10px 10px rgba(36, 36, 56, 0.2) !important;
-  background: var(--static-white) !important;
-  transform: perspective(1px) scale3d(1.04, 1.04, 1.04) !important;
-}
-
-.launchAppBtn:active {
-  background: rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0px 3px 3px rgba(36, 36, 56, 0.1) !important;
-  transform: perspective(1px) scale3d(1, 1, 1) !important;
-}
-
-.launchAppBtnText {
-  font-weight: var(--font-bold) !important;
-  font-size: var(--font-s) !important;
-  text-align: center;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-
-  color: #9147cc !important;
+  color: #000000 !important;
 }
 
 .close {

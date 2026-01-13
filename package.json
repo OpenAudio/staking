@@ -6,8 +6,9 @@
   "homepage": "./",
   "scripts": {
     "configure-env": "node ./scripts/configureEnv.cjs prod",
-    "dev": "npm run configure-env && ./node_modules/.bin/env-cmd -f .env.prod.local npm run start vite",
-    "build": "npm run configure-env && ./node_modules/.bin/env-cmd -f .env.prod.local NODE_OPTIONS=--max_old_space_size=8192 vite build",
+    "start": "vite",
+    "dev": "npm run configure-env && ./node_modules/.bin/env-cmd -f .env.prod.local npm run start",
+    "build": "npm run configure-env && ./node_modules/.bin/env-cmd -f .env.prod.local vite build",
     "deploy": "wrangler deploy",
     "lint": "eslint --cache --ext=js,jsx,ts,tsx src",
     "lint:fix": "eslint --cache --fix --ext=js,jsx,ts,tsx src",

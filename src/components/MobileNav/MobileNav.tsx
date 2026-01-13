@@ -1,18 +1,15 @@
 import { useCallback } from 'react'
 
-import { IconAudiusLogoHorizontal } from '@audius/harmony'
 import { Button, ButtonType, IconRemove } from '@audius/stems'
 import clsx from 'clsx'
 import { matchPath, useNavigate, useLocation } from 'react-router'
 
-import useOpenLink from 'hooks/useOpenLink'
-import { AUDIUS_DAPP_URL, navRoutes } from 'utils/routes'
+import { navRoutes } from 'utils/routes'
 
 import styles from './MobileNav.module.css'
 
 const messages = {
-  launchApp: 'LAUNCH THE APP',
-  name: 'PROTOCOL DASHBOARD'
+  name: 'Open Audio Protocol Staking'
 }
 
 const MobileNavButton = ({
@@ -43,19 +40,6 @@ const MobileNavButton = ({
   )
 }
 
-type LaunchTheAppButtonProps = {}
-const LaunchTheAppButton = (props: LaunchTheAppButtonProps) => {
-  const goToApp = useOpenLink(AUDIUS_DAPP_URL)
-  return (
-    <Button
-      text={messages.launchApp}
-      className={styles.launchAppBtn}
-      textClassName={styles.launchAppBtnText}
-      onClick={goToApp}
-    />
-  )
-}
-
 type MobileNavProps = {
   isOpen: boolean
   onClose: () => void
@@ -75,7 +59,6 @@ const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
       </div>
       <div className={styles.inner}>
         <div className={styles.top}>
-          <IconAudiusLogoHorizontal color='inverse' className={styles.logo} />
           <div className={styles.name}>{messages.name}</div>
         </div>
         {navRoutes.map((route) => (
@@ -87,7 +70,6 @@ const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
             />
           </div>
         ))}
-        <LaunchTheAppButton />
       </div>
     </div>
   )

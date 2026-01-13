@@ -296,11 +296,13 @@ const AppBar: React.FC<AppBarProps> = () => {
             }}
           />
         )}
-        <div className={styles.name}>
-          <Text variant='heading' size='s' strength='default' color='inverse'>
-            {messages.name}
-          </Text>
-        </div>
+        {isMobile ? null : (
+          <div className={styles.name}>
+            <Text variant='heading' size='s' strength='default' color='inverse'>
+              {messages.name}
+            </Text>
+          </div>
+        )}
       </div>
       {!isMobile && (
         <div className={styles.right}>

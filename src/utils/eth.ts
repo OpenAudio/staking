@@ -32,9 +32,9 @@ export const CHAIN_INFO = {
 }
 
 export const WEB3_MODAL_METADATA = {
-  name: 'Audius',
-  description: 'The Audius Protocol Dashboard',
-  url: 'https://dashboard.audius.org',
+  name: 'Open Audio Protocol Staking',
+  description: 'The Open Audio Protocol Staking',
+  url: 'https://staking.openaudio.org',
   icons: [
     'https://www.dropbox.com/scl/fi/xw6rhvvgqev01owt3b5fm/AudiusProtocolDashboardLogo.png?rlkey=41vn0k2w611khbajfedjkphbq&raw=1'
   ]
