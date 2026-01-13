@@ -28,7 +28,7 @@ const RowStat: React.FC<RowStatProps> = ({ label, value }) => {
         {value}
       </Text>
 
-      <Text variant='body' size='l' strength='strong' color='subdued'>
+      <Text variant='body' size='l' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
         {label}
       </Text>
     </Flex>

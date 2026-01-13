@@ -276,11 +276,9 @@ const ServiceBigStat = ({
       onClick={onClick}
       css={{
         cursor: onClick ? 'pointer' : 'default',
-        backgroundColor: color.background.surface1,
+        backgroundColor: '#000000',
         '&:hover': {
-          backgroundColor: onClick
-            ? color.background.surface2
-            : color.background.surface1
+          backgroundColor: onClick ? '#0a0a0a' : '#000000'
         }
       }}
     >
@@ -289,7 +287,7 @@ const ServiceBigStat = ({
           {data}
         </Text>
         <Flex inline gap='xs' alignItems='center'>
-          <Text variant='body' size='l' strength='strong' color='subdued'>
+          <Text variant='body' size='l' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
             {label}
           </Text>
           <TooltipComponent color='subdued' />
@@ -321,12 +319,12 @@ const ServiceSmallStat = ({
           (data as number | string)
         )}
       </Text>
-      <Flex inline gap='xs' alignItems='center'>
-        <Text variant='body' size='l' strength='strong' color='subdued'>
-          {label}
-        </Text>
-        {TooltipComponent == null ? null : <TooltipComponent color='subdued' />}
-      </Flex>
+        <Flex inline gap='xs' alignItems='center'>
+          <Text variant='body' size='l' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+            {label}
+          </Text>
+          {TooltipComponent == null ? null : <TooltipComponent color='subdued' />}
+        </Flex>
     </Flex>
   )
 }
@@ -517,11 +515,11 @@ const ManageService = (props: ManageServiceProps) => {
   const makeClaimBox = <StandaloneBox> {messages.claim} </StandaloneBox>
 
   return (
-    <Card direction='column'>
+    <Card direction='column' css={{ backgroundColor: '#000000' }}>
       <Flex
         pv='l'
         ph='xl'
-        borderBottom='default'
+        css={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}
         justifyContent='space-between'
         alignItems='center'
         w='100%'
@@ -534,12 +532,12 @@ const ManageService = (props: ManageServiceProps) => {
         </Flex>
         <Flex gap='xl' alignItems='center'>
           <Box css={{ textAlign: 'end' }}>
-            <Text variant='heading' size='m' color='accent'>
+            <Text variant='heading' size='m' style={{ color: '#ffffff' }}>
               {AudiusClient.displayShortAud(aggregateContribution)}
             </Text>
 
             <Flex inline gap='xs' alignItems='center'>
-              <Text variant='body' size='m' strength='strong' color='subdued'>
+              <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 {messages.aggregateContribution}
               </Text>
               <AggregateContributionInfoTooltip color='subdued' />
@@ -567,7 +565,7 @@ const ManageService = (props: ManageServiceProps) => {
         <Flex direction='column' gap='xl' css={{ flexGrow: 1 }}>
           <Flex direction='column' gap='l'>
             <Flex inline gap='xs' alignItems='center'>
-              <Text variant='body' size='l' strength='strong' color='subdued'>
+              <Text variant='body' size='l' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 {messages.rewardsPool}
               </Text>
               <EstimatedAudioRewardsPoolInfoTooltip color='subdued' />
@@ -576,7 +574,7 @@ const ManageService = (props: ManageServiceProps) => {
               <MyEstimatedRewards wallet={wallet} />
             </Flex>
           </Flex>
-          <Divider css={{ borderColor: color.neutral.n100 }} />
+          <Divider css={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />
           <Flex direction='column' gap='m'>
             <Stake stake={activeStake} enableChange={isOwner} />
             {deployerCut == null ? (
@@ -638,7 +636,7 @@ const ManageService = (props: ManageServiceProps) => {
       props.showPendingTransactions &&
       currentUserHasPendingTx &&
       isOwner ? (
-        <Box p='xl' borderTop='default'>
+        <Box p='xl' css={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
           <TransactionStatusContent
             ethBlockNumber={ethBlockNumber}
             transactions={pendingTx.transactions}
@@ -650,7 +648,7 @@ const ManageService = (props: ManageServiceProps) => {
           alignItems='center'
           justifyContent='space-between'
           p='xl'
-          borderTop='default'
+          css={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}
         >
           <Flex
             gap='l'
@@ -676,11 +674,11 @@ const ManageService = (props: ManageServiceProps) => {
             ) : null}
           </Flex>
           <Flex direction='column' alignItems='flex-end'>
-            <Text variant='heading' size='m' color='accent'>
+            <Text variant='heading' size='m' style={{ color: '#ffffff' }}>
               {AudiusClient.displayShortAud(delegates)}
             </Text>
             <Flex inline gap='xs' alignItems='center'>
-              <Text variant='body' size='l' color='subdued' strength='strong'>
+              <Text variant='body' size='l' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 {messages.delegatedAudio}
               </Text>
               <DelegatedAudioInfoTooltip color='subdued' />
@@ -693,7 +691,7 @@ const ManageService = (props: ManageServiceProps) => {
           alignItems='center'
           justifyContent='space-between'
           p='xl'
-          borderTop='default'
+          css={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}
         >
           <BasicTooltip
             position={Position.TOP}
@@ -705,6 +703,7 @@ const ManageService = (props: ManageServiceProps) => {
               type={ButtonType.PRIMARY}
               isDisabled={Boolean(cantDelegateReason)}
               onClick={onClickDelegate}
+              className="gradient-button"
             />
           </BasicTooltip>
           <DelegateStakeModal

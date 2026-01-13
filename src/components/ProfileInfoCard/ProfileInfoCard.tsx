@@ -130,7 +130,7 @@ const ProfileInfo = ({
 
 const ProfileInfoCard = (props: ProfileInfoCardProps) => {
   return (
-    <Card direction='column' alignItems='center' p='xl'>
+    <Card direction='column' alignItems='center' p='xl' css={{ backgroundColor: '#000000' }}>
       {props.status !== Status.Success ? (
         <Loading />
       ) : (

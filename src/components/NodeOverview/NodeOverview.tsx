@@ -73,7 +73,7 @@ const ServiceDetail = ({
         {value}
       </Text>
       <Flex inline gap='xs' alignItems='center'>
-        <Text variant='body' size='m' strength='strong' color='subdued'>
+        <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
           {label}
         </Text>
         {TooltipComponent == null ? null : <TooltipComponent color='subdued' />}
@@ -266,7 +266,7 @@ const NodeOverview = ({
   }
 
   return (
-    <Card direction='column' p='xl' w='100%'>
+    <Card direction='column' p='xl' w='100%' css={{ backgroundColor: '#000000' }}>
       {isLoading ? (
         <Loading className={styles.loading} />
       ) : (
@@ -277,7 +277,7 @@ const NodeOverview = ({
                 ? messages.deregistered
                 : health?.version || version || messages.unknown}
             </Text>
-            <Text variant='body' size='m' strength='strong' color='subdued'>
+            <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               {messages.version}
             </Text>
           </Box>
@@ -290,13 +290,13 @@ const NodeOverview = ({
               />
             )}
             {operatorWallet || health?.operatorWallet ? (
-              <Card pv='l' ph='xl' mb='xl'>
+              <Card pv='l' ph='xl' mb='xl' css={{ backgroundColor: '#000000' }}>
                 <Flex direction='column' gap='l'>
                   <Flex inline gap='xs' alignItems='center'>
                     <Text
                       variant='body'
                       size='l'
-                      color='subdued'
+                      style={{ color: 'rgba(255, 255, 255, 0.8)' }}
                       strength='strong'
                     >
                       {messages.operator}
@@ -326,6 +326,7 @@ const NodeOverview = ({
                   onClick={onClick}
                   type={ButtonType.PRIMARY}
                   text={messages.register}
+                  className="gradient-button registerButton"
                   textClassName={styles.registerBtnText}
                 />
                 <RegisterServiceModal
@@ -344,7 +345,7 @@ const NodeOverview = ({
                   onClick={onClick}
                   type={ButtonType.PRIMARY}
                   text={messages.modify}
-                  className={clsx(styles.modifyBtn)}
+                  className="gradient-button manageNodeButton"
                   textClassName={styles.modifyBtnText}
                 />
                 <ModifyServiceModal

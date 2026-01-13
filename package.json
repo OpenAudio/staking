@@ -5,23 +5,14 @@
   "type": "module",
   "homepage": "./",
   "scripts": {
-    "configure-local-env": "node ./scripts/configureEnv.cjs dev",
-    "configure-prod-env": "node ./scripts/configureEnv.cjs prod",
-    "start": "vite",
-    "serve": "vite preview",
-    "start:dev": "npm run configure-local-env && ./node_modules/.bin/env-cmd -f .env.dev.local npm run start",
-    "start:prod": "npm run configure-prod-env && ./node_modules/.bin/env-cmd -f .env.prod.local npm run start",
-    "build": "NODE_OPTIONS=--max_old_space_size=8192 vite build",
-    "build:prod": "npm run configure-prod-env && ./node_modules/.bin/env-cmd -f .env.prod.local npm run build",
-    "deploy:prod": "wrangler deploy --env production",
+    "configure-env": "node ./scripts/configureEnv.cjs prod",
+    "dev": "npm run configure-env && ./node_modules/.bin/env-cmd -f .env.prod.local npm run start vite",
+    "build": "npm run configure-env && ./node_modules/.bin/env-cmd -f .env.prod.local NODE_OPTIONS=--max_old_space_size=8192 vite build",
+    "deploy": "wrangler deploy",
     "lint": "eslint --cache --ext=js,jsx,ts,tsx src",
     "lint:fix": "eslint --cache --fix --ext=js,jsx,ts,tsx src",
     "lint:env": "dotenv-linter --exclude .env.prod.local",
-    "pull-dev-accounts": "node ./scripts/pullDevAccounts.js",
-    "typecheck": "tsc",
-    "advance-blocks": "node ./scripts/advanceBlocks.js",
-    "TODO - ADD TYPECHECK TO VERIFY: =========================": "",
-    "verify": "concurrently \"npm:lint\" \"npm:lint:env\""
+    "typecheck": "tsc"
   },
   "browserslist": {
     "production": [

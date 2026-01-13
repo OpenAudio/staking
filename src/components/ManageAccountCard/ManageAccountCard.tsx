@@ -142,7 +142,7 @@ const UserAudioRewardEstimate = ({
   return (
     <Flex mt='l' direction='column' gap='s'>
       <Flex gap='s'>
-        <Text variant='heading' size='s' strength='default' tag='span'>
+        <Text variant='heading' size='s' strength='default' tag='span' style={{ color: '#ffffff' }}>
           {weeklyFormatted}
         </Text>
         <Text variant='heading' size='s' strength='default' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
@@ -150,7 +150,7 @@ const UserAudioRewardEstimate = ({
         </Text>
       </Flex>
       <Flex gap='s'>
-        <Text variant='heading' size='s' strength='default' tag='span'>
+        <Text variant='heading' size='s' strength='default' tag='span' style={{ color: '#ffffff' }}>
           {annualFormatted}
         </Text>
         <Text variant='heading' size='s' strength='default' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
@@ -202,14 +202,15 @@ export const ManageAccountCard = ({ wallet }: ManageAccountCardProps) => {
             alignItems='center'
             gap='2xl'
             wrap='wrap'
+            css={{ backgroundColor: '#000000' }}
           >
-            <Card direction='column' pv='l' ph='xl'>
+            <Card direction='column' pv='l' ph='xl' css={{ backgroundColor: '#000000' }}>
               <Flex inline gap='xs' alignItems='center'>
                 <Text
                   variant='heading'
-                  color='subdued'
                   size='s'
                   strength='default'
+                  style={{ color: 'rgba(255, 255, 255, 0.8)' }}
                 >
                   {messages.delegatingTo}
                 </Text>
@@ -223,9 +224,9 @@ export const ManageAccountCard = ({ wallet }: ManageAccountCardProps) => {
               <Flex inline gap='xs' alignItems='center'>
                 <Text
                   variant='heading'
-                  color='subdued'
                   size='s'
                   strength='default'
+                  style={{ color: 'rgba(255, 255, 255, 0.8)' }}
                 >
                   {messages.estimatedReward}
                 </Text>
@@ -244,16 +245,16 @@ export const ManageAccountCard = ({ wallet }: ManageAccountCardProps) => {
                   variant='heading'
                   size='m'
                   strength='default'
-                  color='accent'
+                  style={{ color: '#ffffff' }}
                 >
                   {AudiusClient.displayShortAud(d.amount)}
                 </Text>
                 <Flex inline gap='xs' alignItems='center'>
                   <Text
                     variant='heading'
-                    color='subdued'
                     size='s'
                     strength='default'
+                    style={{ color: 'rgba(255, 255, 255, 0.8)' }}
                   >
                     {messages.delegatedToken}
                   </Text>

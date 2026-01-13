@@ -85,7 +85,7 @@ export const AUDIUS_DAPP_URL =
   import.meta.env.VITE_AUDIUS_URL || 'https://audius.co'
 export const DOCS_URL = 'https://docs.audius.org/'
 export const REGISTER_NODE_DOCS_URL =
-  'https://docs.openaudio.org/tutorials/running-a-node'
+  'https://docs.openaudio.org/tutorials/run-a-node'
 export const COOLDOWN_PERIOD_DOCS_URL =
   'https://docs.audius.org/node-operator/staking/delegate#cooldown-period'
 

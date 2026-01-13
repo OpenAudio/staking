@@ -5,6 +5,7 @@ import RegisterServiceModal from 'components/RegisterServiceModal'
 import { useModalControls } from 'utils/hooks'
 
 import styles from './ManageService.module.css'
+import buttonStyles from './RegisterNewServiceBtn.module.css'
 
 const messages = {
   register: 'Register New Node'
@@ -23,7 +24,7 @@ export const RegisterNewServiceBtn = ({
         onClick={onClick}
         type={ButtonType.PRIMARY}
         text={customText || messages.register}
-        className={clsx(styles.registerBtn)}
+        className="gradient-button registerButton"
         textClassName={styles.registerBtnText}
       />
       <RegisterServiceModal isOpen={isOpen} onClose={onClose} />

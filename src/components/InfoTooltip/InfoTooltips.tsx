@@ -5,7 +5,7 @@ import { InfoTooltip } from './InfoTooltip'
 const messages = {
   uniqueUsersTooltipTitle: 'How is this number calculated?',
   uniqueUsersTooltipBody:
-    'The unique user number is the sum of unique IP addresses per time interval interacting with Discovery Nodes on the Audius network.',
+    'The unique user number is the sum of unique IP addresses per time interval interacting with Discovery Nodes on the protocol.',
   uniqueUsersTooltipCtaText: 'More information',
   apiCallsTooltipTitle: 'What are API Calls?',
   apiCallsTooltipBody:
@@ -13,10 +13,10 @@ const messages = {
   apiCallsCtaText: 'Build on Audius',
   globalStakedAudioTooltipTitle: 'What is this?',
   globalStakedAudioTooltipBody:
-    'Global Staked $AUDIO is the aggregate sum of all the staked $AUDIO across the entire Audius network.',
+    'Total Staked $AUDIO is the aggregate sum of all the staked $AUDIO across the entire protocol.',
   estimatedRewardRateTooltipTitle: 'What is this?',
   estimatedRewardRateTooltipBody:
-    'This is an estimate of the rate rewards are rewarded to participants across the Audius network.',
+    'This is an estimate of the rate rewards are rewarded to participants across the protocol.',
   playsTooltipTitle: 'What Counts as a Play?',
   playsTooltipBody:
     "A 'Play' is counted each time a Track is streamed on the Audius platform, including streams initiated through API applications. This comprehensive count aids Artists in gauging the popularity and reach of their music across different access points.",
@@ -43,13 +43,13 @@ const messages = {
     "'Top Contributors' is a ranked list of wallet addresses based on their Voting Weight, which reflects the amount of $AUDIO tokens they have staked or delegated.",
   nodesTooltipTitle: 'What are Validator Nodes?',
   nodesTooltipBody:
-    'Validator Nodes are vital for storing and maintaining the availability of all of the media on the Audius network as well as validating all transactions that happen on the network.',
+    'Validator Nodes are vital for storing and maintaining the availability of all of the media on the protocol as well as validating all transactions that happen on the network.',
   discoveryNodesTooltipTitle: 'What are Discovery Nodes?',
   discoveryNodesTooltipBody:
-    'Discovery Nodes are services in the Audius network responsible for indexing metadata and making data available for queries. They store and update information such as user, track, and playlist details, along with social features, facilitating efficient data access for users.',
+    'Discovery Nodes are services in the protocol responsible for indexing metadata and making data available for queries. They store and update information such as user, track, and playlist details, along with social features, facilitating efficient data access for users.',
   contentNodesTooltipTitle: 'What are Content Nodes?',
   contentNodesTooltipBody:
-    'Content Nodes are vital for storing and maintaining the availability of all of the media on the Audius network.',
+    'Content Nodes are vital for storing and maintaining the availability of all of the media on the protocol.',
   estimatedAudioRewardsPoolTooltipTitle: 'What is this?',
   estimatedAudioRewardsPoolTooltipBody:
     "The 'Estimated $AUDIO Rewards Pool' represents the total rewards projected to be distributed to a node operator and its delegators.",
@@ -61,10 +61,10 @@ const messages = {
     "The 'Operator Service Fee' refers to the percentage of staking rewards that node operators earn for running their nodes. The fee amount is configurable by the node operator and is deducted from the delegator rewards before they're distributed.",
   nodeOperatorTooltipTitle: 'What is a Node Operator?',
   nodeOperatorTooltipBody:
-    'A Node Operator is an individual or organization responsible for running a Node on the Audius Network.',
+    'A Node Operator is an individual or organization responsible for running a Node on the protocol.',
   registerNodeTooltipTitle: 'How to Register a Node?',
   registerNodeTooltipBody:
-    'Node Operators run the decentralized infrastructure that powers the Audius Network.  To learn more about running a node, please read the docs.',
+    'Node Operators run the decentralized infrastructure that powers the protocol.  To learn more about running a node, please read the docs.',
   registerNodeCtaText: 'Running a Node',
   storageCommitmentTooltipTitle: 'What is Storage Commitment?',
   storageCommitmentTooltipBody:
@@ -75,7 +75,7 @@ const CTA_HREFS = {
   uniqueUsers:
     'https://help.audius.co/help/How-Are-User-Numbers-Calculated-on-Audius-718e9',
   registerNode:
-    'https://docs.audius.org/token/running-a-node/setup/registration',
+    'https://docs.audius.org/token/run-a-node/setup/registration',
   apiCalls: 'https://docs.audius.org/developers'
 }
 

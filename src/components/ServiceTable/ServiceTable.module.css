@@ -53,6 +53,13 @@
   padding: 0;
 }
 
+.error svg,
+.error svg path {
+  fill: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  stroke: rgba(255, 255, 255, 0.8) !important;
+}
+
 .countryFlag {
   margin: var(--unit-2);
 }

@@ -9,6 +9,52 @@
   transition: all 0.13s ease-in, background-position 0.25s ease-in;
 }
 
+/* White-to-gold gradient buttons - unified approach */
+.btnContainer .primary:global(.gradient-button),
+.btnContainer :global(.gradient-button) {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  color: #000000 !important;
+}
+
+.btnContainer .primary:global(.gradient-button):hover {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-position: 0% 100% !important;
+}
+
+.btnContainer .primary:global(.gradient-button):active {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+}
+
+/* Make icons black in white-to-gold gradient buttons */
+.btnContainer .primary:global(.gradient-button) svg path {
+  fill: #000000 !important;
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+/* Make button text black */
+.btnContainer .primary:global(.gradient-button) *,
+.btnContainer .primary:global(.gradient-button) [class*="primaryText"] {
+  color: #000000 !important;
+}
+
+/* Special sizing for specific buttons */
+.btnContainer .primary:global(.gradient-button.startNextRoundButton),
+.btnContainer :global(.gradient-button.startNextRoundButton) {
+  min-height: 48px !important;
+  padding: 14px 16px !important;
+  height: auto !important;
+}
+
+/* Ensure height applies even when disabled */
+.btnContainer .primary:global(.gradient-button.startNextRoundButton).isDisabled,
+.btnContainer :global(.gradient-button.startNextRoundButton).isDisabled {
+  min-height: 48px !important;
+  padding: 14px 16px !important;
+  height: auto !important;
+}
+
 .btnContainer .primary:hover {
   box-shadow: 0px 10px 10px rgba(36, 36, 56, 0.2) !important;
   transform: scale3d(1.04, 1.04, 1.04) !important;
@@ -160,6 +206,27 @@
   background: #696D88 !important;
 }
 
+/* Override disabled background for gradient buttons - must come after disabled rule with higher specificity */
+.btnContainer .primary:global(.gradient-button).isDisabled,
+.btnContainer .primary:global(.gradient-button).isDisabled:hover,
+.btnContainer .primary:global(.gradient-button).isDisabled:active,
+.btnContainer :global(.gradient-button).isDisabled,
+.btnContainer :global(.gradient-button).isDisabled:hover,
+.btnContainer :global(.gradient-button).isDisabled:active {
+  background: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-color: transparent !important;
+  opacity: 0.5;
+}
+
 .btnContainer .isDisabled .isTextDisabled {
   color: var(--static-white);
+}
+
+/* Override text color for disabled gradient buttons */
+.btnContainer .primary:global(.gradient-button).isDisabled .isTextDisabled,
+.btnContainer .primary:global(.gradient-button).isDisabled *,
+.btnContainer :global(.gradient-button).isDisabled .isTextDisabled,
+.btnContainer :global(.gradient-button).isDisabled * {
+  color: #000000 !important;
 }

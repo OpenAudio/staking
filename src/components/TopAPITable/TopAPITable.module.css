@@ -72,6 +72,13 @@
   min-width: 100px;
 }
 
+.error svg,
+.error svg path {
+  fill: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  stroke: rgba(255, 255, 255, 0.8) !important;
+}
+
 .error {
   height: 20px;
   width: 20px;

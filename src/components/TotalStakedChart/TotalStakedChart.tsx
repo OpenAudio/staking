@@ -9,7 +9,7 @@ import { Bucket, MetricError } from 'store/cache/analytics/slice'
 import { Status } from 'types'
 
 const messages = {
-  currentGlobalStaked: 'Current Global Staked $AUDIO',
+  currentGlobalStaked: 'Total Staked $AUDIO',
   audioToken: '$AUDIO'
 }
 

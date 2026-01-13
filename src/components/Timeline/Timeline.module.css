@@ -43,21 +43,25 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-  padding: 16px 0px;
+  padding: 12px 16px;
   font-family: var(--font-family);
   font-weight: var(--font-bold);
   font-size: var(--font-s);
   text-align: center;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #777C96;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  margin: 16px 32px;
   -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .viewAll:hover {
-  background: #000000;
+  background-color: rgba(255, 255, 255, 0.1);
   cursor: pointer;
 }

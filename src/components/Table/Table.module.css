@@ -41,7 +41,22 @@
 }
 
 .columnTitle {
+  font-family: var(--font-family);
+  font-weight: var(--font-bold);
+  font-size: var(--font-xs);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
 }
+
+/* Make specific column headers smaller to prevent wrapping */
+.columnTitle.totalStakedColumn,
+.columnTitle.voteWeightColumn,
+.columnTitle.proposalVotedColumn {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
 
 .rowContainer {
   padding: 0px 32px;
@@ -89,6 +104,13 @@
 
 .tableLoading {
   margin: 16px 0px;
+}
+
+.container .error svg,
+.container .error svg path {
+  fill: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  stroke: rgba(255, 255, 255, 0.8) !important;
 }
 
 .container .error {

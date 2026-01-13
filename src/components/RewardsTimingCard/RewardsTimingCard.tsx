@@ -86,7 +86,7 @@ export const RewardsTimingCard = () => {
             )}
           </Box>
           <Box>
-            <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+            <Text variant='body' size='m' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               {messages.currentRound}
             </Text>
           </Box>
@@ -109,7 +109,7 @@ export const RewardsTimingCard = () => {
                   {getHumanReadableTime(timeRemaining)}
                 </Text>
               )}
-              <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+              <Text variant='body' size='m' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 {messages.untilNextRound}
               </Text>
             </Box>
@@ -123,7 +123,7 @@ export const RewardsTimingCard = () => {
                   {formatNumber(period)}
                 </Text>
               )}
-              <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+              <Text variant='body' size='m' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 {messages.blocksRemaining}
               </Text>
             </Box>
@@ -135,6 +135,7 @@ export const RewardsTimingCard = () => {
               rightIcon={isSubmitting ? <LoadingSpinner /> : undefined}
               isDisabled={!canInitiateRound || isSubmitting}
               onClick={handleClickInitiateRound}
+              className="gradient-button startNextRoundButton"
             />
           ) : null}
         </Card>

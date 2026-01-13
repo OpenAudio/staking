@@ -52,7 +52,7 @@ export const RegisterNodeCard = ({ wallet }: { wallet: string }) => {
   }, [])
 
   return (
-    <Card direction='column'>
+    <Card direction='column' css={{ backgroundColor: '#000000' }}>
       <Flex
         pv='xl'
         ph='xl'
@@ -95,7 +95,7 @@ export const RegisterNodeCard = ({ wallet }: { wallet: string }) => {
               )}
             </Box>
             <Flex gap='xs' alignItems='center'>
-              <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+              <Text variant='body' size='m' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 {messages.currentVersion}
               </Text>
             </Flex>
@@ -113,7 +113,7 @@ export const RegisterNodeCard = ({ wallet }: { wallet: string }) => {
               )}
             </Box>
             <Flex gap='xs' alignItems='center'>
-              <Text variant='body' size='m' strength='strong' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+              <Text variant='body' size='m' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 {messages.storageCommitment}
               </Text>
               <StorageCommitmentInfoTooltip color='subdued' />

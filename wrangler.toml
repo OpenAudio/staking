@@ -6,6 +6,3 @@ name = "staking"
 
 [site]
 bucket = "./dist"
-
-[env.production]
-name = "staking"

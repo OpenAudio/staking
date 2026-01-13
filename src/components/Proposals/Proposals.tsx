@@ -40,7 +40,7 @@ const NewProposalBtn = () => {
         leftIcon={<IconSave />}
         type={ButtonType.PRIMARY}
         text={messages.newProposal}
-        className={clsx(styles.registerBtn)}
+        className="gradient-button newProposalButton"
         textClassName={styles.registerBtnText}
       />
       <NewProposalModal isOpen={isOpen} onClose={onClose} />

@@ -8,9 +8,13 @@
   font-display: swap;
 }
 
+* {
+  font-family: "new-science", sans-serif !important;
+}
+
 body {
   margin: 0;
-  font-family: "Terminus", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-family: "new-science", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #000000;
@@ -21,9 +25,14 @@ body {
   color: #ffffff;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Override Harmony and other component fonts */
+html, html *, body, body * {
+  font-family: "new-science", sans-serif !important;
+}
+
+/* Keep Terminus for code and specific use cases */
+code, pre, .mono, [class*="terminal"], [class*="code"] {
+  font-family: "Terminus", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
 }
 
 /* Override Harmony border colors to match black & white theme */
@@ -31,3 +40,129 @@ html[data-theme='dark'] {
   --harmony-border-default: rgba(255, 255, 255, 0.1);
   --harmony-border-strong: rgba(255, 255, 255, 0.2);
 }
+
+/* White-to-gold gradient buttons - unified approach using data attribute */
+/* Target any button with the gradient-button class or data attribute */
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"],
+[class*="btnContainer"] [class*="primary"].gradient-button,
+[class*="btnContainer"] [class*="gradient-button"],
+[class*="btnContainer"] .gradient-button,
+button.gradient-button,
+[data-gradient-button="true"] {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-color: transparent !important;
+  color: #000000 !important;
+}
+
+/* Override disabled state for gradient buttons - must be more specific than Stems library styles */
+/* Target all possible combinations of disabled gradient buttons */
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"][class*="isDisabled"],
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"][class*="disabled"],
+[class*="btnContainer"] [class*="primary"].gradient-button[class*="isDisabled"],
+[class*="btnContainer"] [class*="primary"].gradient-button[class*="disabled"],
+[class*="btnContainer"] [class*="gradient-button"][class*="isDisabled"],
+[class*="btnContainer"] [class*="gradient-button"][class*="disabled"],
+[class*="btnContainer"] .gradient-button[class*="isDisabled"],
+[class*="btnContainer"] .gradient-button[class*="disabled"],
+button[class*="primary"][class*="gradient-button"][class*="isDisabled"],
+button[class*="primary"][class*="gradient-button"][class*="disabled"],
+button.gradient-button[class*="disabled"],
+button.gradient-button[class*="isDisabled"],
+button[class*="gradient-button"][class*="disabled"],
+button[class*="gradient-button"][class*="isDisabled"],
+[class*="Button-module"][class*="gradient-button"][class*="disabled"],
+[class*="Button-module"][class*="gradient-button"][class*="isDisabled"] {
+  background: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-color: transparent !important;
+  opacity: 0.5 !important;
+}
+
+/* Also override on hover/active states for disabled gradient buttons */
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"][class*="isDisabled"]:hover,
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"][class*="isDisabled"]:active,
+button.gradient-button[class*="disabled"]:hover,
+button.gradient-button[class*="disabled"]:active,
+button.gradient-button[class*="isDisabled"]:hover,
+button.gradient-button[class*="isDisabled"]:active {
+  background: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-color: transparent !important;
+}
+
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"]:hover,
+[class*="btnContainer"] [class*="primary"].gradient-button:hover,
+[data-gradient-button="true"]:hover {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-position: 0% 100% !important;
+}
+
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"]:active,
+[class*="btnContainer"] [class*="primary"].gradient-button:active,
+[data-gradient-button="true"]:active {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+}
+
+/* Make button text and children black for white-to-gold gradient buttons */
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"] *,
+[class*="btnContainer"] [class*="primary"].gradient-button *,
+[data-gradient-button="true"] * {
+  color: #000000 !important;
+}
+
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"] [class*="primaryText"],
+[class*="btnContainer"] [class*="primary"].gradient-button [class*="primaryText"],
+[data-gradient-button="true"] [class*="primaryText"] {
+  color: #000000 !important;
+}
+
+/* Global icon color overrides - enAure error/warning icons and other UI icons are white/off-white */
+/* Target common icon containers and error states */
+.error svg path,
+.error svg circle,
+.error svg rect,
+.error svg g,
+.textWithIcon svg path,
+.textWithIcon svg circle,
+.textWithIcon svg rect,
+.textWithIcon svg g {
+  fill: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  stroke: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Exception: icons in white-to-gold gradient buttons should be black */
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"] svg path,
+[class*="btnContainer"] [class*="primary"].gradient-button svg path,
+[data-gradient-button="true"] svg path {
+  fill: #000000 !important;
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+/* Special sizing for start next round button */
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"][class*="startNextRoundButton"],
+[class*="btnContainer"] [class*="primary"].gradient-button[class*="startNextRoundButton"],
+[class*="btnContainer"] [class*="gradient-button"][class*="startNextRoundButton"],
+[class*="btnContainer"] .gradient-button[class*="startNextRoundButton"],
+button[class*="gradient-button"][class*="startNextRoundButton"],
+button.gradient-button[class*="startNextRoundButton"] {
+  min-height: 48px !important;
+  padding: 14px 16px !important;
+  height: auto !important;
+}
+
+/* Ensure height applies even when disabled */
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"][class*="startNextRoundButton"][class*="isDisabled"],
+[class*="btnContainer"] [class*="primary"][class*="gradient-button"][class*="startNextRoundButton"][class*="disabled"],
+[class*="btnContainer"] [class*="gradient-button"][class*="startNextRoundButton"][class*="isDisabled"],
+[class*="btnContainer"] [class*="gradient-button"][class*="startNextRoundButton"][class*="disabled"],
+button[class*="gradient-button"][class*="startNextRoundButton"][class*="isDisabled"],
+button[class*="gradient-button"][class*="startNextRoundButton"][class*="disabled"] {
+  min-height: 48px !important;
+  padding: 14px 16px !important;
+  height: auto !important;
+}
+
+

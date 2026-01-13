@@ -33,19 +33,21 @@ const Timeline = ({ className, wallet, timelineType }: TimelineProps) => {
   useEffect(() => {
     onClose()
   }, [wallet, onClose])
+  // Show empty state if timeline is undefined (no data) or empty array
+  const hasTimeline = Array.isArray(timeline)
+  const hasEvents = hasTimeline && timeline.length > 0
+
   return (
     <Paper className={clsx({ [className!]: !!className })}>
       <h3 className={styles.title}>{messages.title}</h3>
-      {Array.isArray(timeline) ? (
-        timeline.length > 0 ? (
-          timeline
-            .slice(0, 4)
-            .map((event, i) => (
-              <TimelineEvent key={i} event={event} onClick={onClick} />
-            ))
-        ) : (
-          <div className={styles.emptyTimeline}>{messages.emptyTimeline}</div>
-        )
+      {hasEvents ? (
+        timeline
+          .slice(0, 4)
+          .map((event, i) => (
+            <TimelineEvent key={i} event={event} onClick={onClick} />
+          ))
+      ) : hasTimeline ? (
+        <div className={styles.emptyTimeline}>{messages.emptyTimeline}</div>
       ) : (
         <div className={styles.loadingContainer}>
           <Loading className={styles.loading} />

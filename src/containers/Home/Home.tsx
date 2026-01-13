@@ -42,7 +42,7 @@ const styles = createStyles({ desktopStyles, mobileStyles })
 
 const messages = {
   title: 'Overview',
-  globalStakedAudio: `Global Staked ${TICKER}`,
+  globalStakedAudio: `Total Staked ${TICKER}`,
   estimatedRewardRate: `Estimated ${TICKER} Reward Rate`,
   recentProposals: 'Recent Proposals',
   noProposals: 'No Recent Proposals',

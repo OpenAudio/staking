@@ -158,6 +158,7 @@ const UserInfo = ({
               type={ButtonType.PRIMARY}
               isDisabled={isDelegatorLimitReached}
               onClick={onClick}
+              className="gradient-button"
             />
           </BasicTooltip>
           <DelegateStakeModal

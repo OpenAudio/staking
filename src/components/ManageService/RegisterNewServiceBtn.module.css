@@ -1,0 +1,16 @@
+/* Override primary button gradient to use white-to-gold gradient */
+.registerButton {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-size: 150% 100% !important;
+  background-position: 100% 100% !important;
+}
+
+.registerButton:hover {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+  background-position: 0% 100% !important;
+}
+
+.registerButton:active {
+  background-image: linear-gradient(315deg, #FFFFFF 0%, #FFFEF5 50%, #FFFAE5 100%) !important;
+}
+
