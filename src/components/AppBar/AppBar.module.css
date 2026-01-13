@@ -21,6 +21,20 @@
   align-items: center;
 }
 
+.navLink {
+  font-family: var(--font-family);
+  font-weight: var(--font-medium);
+  font-size: var(--font-m);
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: underline;
+}
+
 .logo {
   width: 40px;
 }

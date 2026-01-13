@@ -304,6 +304,24 @@ const AppBar: React.FC<AppBarProps> = () => {
       </div>
       {!isMobile && (
         <div className={styles.right}>
+          <Flex gap='l' alignItems='center'>
+            <a
+              href='https://explorer.openaudio.org'
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.navLink}
+            >
+              Explorer
+            </a>
+            <a
+              href='https://docs.openaudio.org'
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.navLink}
+            >
+              Docs
+            </a>
+          </Flex>
           {hasConnectedAudiusAccount ||
           !wallet ||
           !isLoggedIn ||
