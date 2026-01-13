@@ -2,9 +2,10 @@ account_id = "3811365464a8e56b2b27a5590e328e49"
 workers_dev = true
 compatibility_date = "2025-06-25"
 main = "src/worker.ts"
+name = "staking"
 
 [site]
 bucket = "./dist"
 
 [env.production]
-name = "protocol-dashboard"
+name = "staking"
