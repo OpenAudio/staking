@@ -57,7 +57,7 @@ const ServiceTable: React.FC<ServiceTableProps> = ({
             />
           ) : (
             <span className={styles.countryFlag} aria-label='Unknown location'>
-              🌐
+              🏁
             </span>
           )}
           {data.endpoint}
