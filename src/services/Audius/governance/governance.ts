@@ -1,5 +1,12 @@
 import BN from 'bn.js'
-import { type Log, type Hex, hexToString, stringToHex } from 'viem'
+import {
+  type Log,
+  type Hex,
+  encodeAbiParameters,
+  hexToString,
+  parseAbiParameters,
+  stringToHex
+} from 'viem'
 
 import {
   GovernanceProposalEvent,
@@ -316,11 +323,16 @@ export default class Governance {
    * Submit a proposal. The on-chain function returns the new proposalId,
    * which we capture via a pre-flight simulation so consumers get the legacy
    * return shape without parsing receipt logs.
+   *
+   * `callData` is accepted as either an array of raw argument values (the
+   * legacy SDK's shape — it encoded internally based on functionSignature)
+   * or a pre-encoded hex blob. When given an array we ABI-encode it here
+   * using the parameter types parsed out of `functionSignature`.
    */
   async submitProposal(args: {
     targetContractName: string
     functionSignature: string
-    callData: Hex
+    callData: Hex | unknown[]
     name: string
     description: string
   }): Promise<ProposalId> {
@@ -328,11 +340,15 @@ export default class Governance {
     const owner = getConnectedAccount()
     if (!owner) throw new Error('No connected account')
     const registryKey = stringToHex(args.targetContractName, { size: 32 })
+    const encodedCallData =
+      typeof args.callData === 'string'
+        ? args.callData
+        : encodeCallData(args.functionSignature, args.callData)
     const proposalArgs = [
       registryKey,
       0n, // callValue: currently always 0
       args.functionSignature,
-      args.callData,
+      encodedCallData,
       args.name,
       args.description
     ] as const
@@ -488,3 +504,15 @@ const createRawVote = (vote: Vote): 1 | 2 => {
 
 // Re-exported for legacy callers that pull from helpers.ts via this module.
 export { hexToString }
+
+/**
+ * ABI-encode an array of arg values against the parameter types parsed out
+ * of a Solidity-style function signature. e.g. signature `slash(uint256,
+ * address)` + values `[100n, '0xabc...']` -> the 64-byte hex blob the
+ * Governance contract expects as `_callData`.
+ */
+function encodeCallData(functionSignature: string, values: unknown[]): Hex {
+  const inside = functionSignature.split('(')[1]?.split(')')[0] ?? ''
+  if (!inside.trim()) return '0x' as Hex
+  return encodeAbiParameters(parseAbiParameters(inside), values as any)
+}

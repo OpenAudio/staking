@@ -21,17 +21,26 @@
  * code in this app touched any of those subsystems).
  */
 
-import type { EIP1193Provider } from 'viem'
-
 import { CHAIN_ID } from 'utils/eth'
 
 import { AudiusClient } from './AudiusClient'
 import { attachSigner } from './eth'
 
+/**
+ * A minimal Eip1193 wallet provider interface. We deliberately avoid
+ * importing viem's `Eip1193Provider` or ethers' `Eip1193Provider`
+ * directly here: web3modal hands us the ethers flavor and our internal
+ * code consumes a structurally compatible subset (`request(...)`),
+ * so the loosest shape that works for both is the right type.
+ */
+export type Eip1193Provider = {
+  request: (args: { method: string; params?: unknown }) => Promise<unknown>
+}
+
 export const IS_PRODUCTION = import.meta.env.VITE_ENVIRONMENT === 'production'
 
 export const getWalletChainId = async (
-  walletProvider: EIP1193Provider
+  walletProvider: Eip1193Provider
 ): Promise<string> => {
   const chainId = (await walletProvider.request({
     method: 'eth_chainId',
@@ -44,7 +53,7 @@ export const getWalletChainId = async (
  * Eth providers sometimes return a null chainId on first request, so retry
  * once after a short delay before giving up.
  */
-const getWalletIsOnEthMainnet = async (walletProvider: EIP1193Provider) => {
+const getWalletIsOnEthMainnet = async (walletProvider: Eip1193Provider) => {
   let chainId = await getWalletChainId(walletProvider)
   if (chainId === CHAIN_ID) return true
 
@@ -60,7 +69,7 @@ const getWalletIsOnEthMainnet = async (walletProvider: EIP1193Provider) => {
 }
 
 const getWalletAccount = async (
-  walletProvider: EIP1193Provider
+  walletProvider: Eip1193Provider
 ): Promise<`0x${string}` | null> => {
   const accounts = (await walletProvider.request({
     method: 'eth_accounts',
@@ -71,8 +80,8 @@ const getWalletAccount = async (
 
 export let resolveAccountConnected:
   | null
-  | ((provider: EIP1193Provider) => void) = null
-const accountConnectedPromise = new Promise<EIP1193Provider>((resolve) => {
+  | ((provider: Eip1193Provider) => void) = null
+const accountConnectedPromise = new Promise<Eip1193Provider>((resolve) => {
   resolveAccountConnected = resolve
 })
 
@@ -110,7 +119,7 @@ export async function setup(this: AudiusClient): Promise<void> {
       this.hasValidAccount = false
     } else {
       // Rebuild the eth sdk with the user's wallet client wired in.
-      attachSigner({ walletProvider, account })
+      attachSigner({ walletProvider: walletProvider as any, account })
       this.hasValidAccount = true
       this.isViewOnly = false
     }
