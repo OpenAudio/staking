@@ -63,11 +63,12 @@ import {
   custom,
   type EIP1193Provider,
   type Hex,
+  type TransactionReceipt as ViemTxReceipt,
   type WalletClient
 } from 'viem'
 import { mainnet } from 'viem/chains'
 
-import type { Address } from 'types'
+import type { Address, TxReceipt } from 'types'
 
 type AudiusEthSdk = ReturnType<typeof createSdkWithServices>
 
@@ -215,6 +216,43 @@ export function simulate(params: {
   account?: Hex
 }) {
   return getEthPublicClient().simulateContract(params as any)
+}
+
+/**
+ * Send a write tx, wait for the receipt, project it into the legacy `TxReceipt`
+ * shape the rest of the dashboard expects (bigints -> numbers, no decoded
+ * event dict — `events` is left as `{}` since no consumer reads it).
+ */
+export async function writeAndWait(params: {
+  address: Hex
+  abi: readonly any[]
+  functionName: string
+  args?: readonly unknown[]
+}): Promise<TxReceipt> {
+  const hash = await write(params)
+  const receipt = await getEthPublicClient().waitForTransactionReceipt({ hash })
+  return toLegacyTxReceipt(receipt)
+}
+
+/** Project a viem `TransactionReceipt` into the dashboard's legacy `TxReceipt`. */
+export function toLegacyTxReceipt(receipt: ViemTxReceipt): TxReceipt {
+  return {
+    blockHash: receipt.blockHash,
+    blockNumber: Number(receipt.blockNumber),
+    contractAddress: receipt.contractAddress ?? null,
+    cumulativeGasUsed: Number(receipt.cumulativeGasUsed),
+    // viem's TransactionReceipt does not include a decoded event dict; the
+    // legacy field is only used in console logs / fall-throughs that don't
+    // care about its contents.
+    events: {},
+    from: receipt.from,
+    gasUsed: Number(receipt.gasUsed),
+    logsBloom: receipt.logsBloom,
+    status: receipt.status === 'success',
+    to: receipt.to ?? '',
+    transactionHash: receipt.transactionHash,
+    transactionIndex: receipt.transactionIndex
+  }
 }
 
 /* -------------------- Type-level helpers -------------------- */
