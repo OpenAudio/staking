@@ -227,21 +227,87 @@ export const contracts = {
 /* -------------------- Read / write / simulate helpers -------------------- */
 
 /**
- * Thin wrapper around `publicClient.readContract`. Forwards every viem
- * parameter; just saves the caller from threading the client through.
+ * Thin wrapper around `publicClient.readContract` with in-flight
+ * deduplication + short-TTL caching.
  *
- * We accept loose `any`-typed params to dodge viem's strict-mode-only type
- * narrowing (the staking app has `strict: false`). Callers cast the
- * return value at the boundary — see `toBN()` for the bigint -> BN
- * conversion that wrappers apply.
+ * Why: react components like TopOperatorsTable render UserImage + UserName
+ * for every operator row, both of which call useUserProfile -> useUser
+ * for the same wallet. Each useUser instance can independently dispatch
+ * fetchUser/fetchUsers, which fans out reads like
+ * \`getPendingUndelegateRequest(wallet)\` for every operator. Without
+ * deduplication, the same read fires once per consumer. On top of that,
+ * if web3modal's WebSocket-reconnect retry loop bumps React state every
+ * second (the workers-preview domain isn't whitelisted in Reown, so
+ * connection fails repeatedly), every re-render that triggers a thunk
+ * compounds the spam.
+ *
+ * The legacy @audius/sdk-legacy implicitly absorbed this via its own
+ * caching/multicall layer — \`main\` doesn't hammer eth-client.audius.co.
+ * We restore the same property with two layers here:
+ *
+ *   1. **In-flight coalescing** — if a read with the same key is already
+ *      pending, return the same Promise instead of issuing a second one.
+ *   2. **Short-TTL settled cache** — after a read resolves, hold the
+ *      result for READ_CACHE_TTL_MS so a re-render within the window
+ *      doesn't reissue. View methods we read here change on user-driven
+ *      tx flows that the dashboard already invalidates explicitly, so a
+ *      30s TTL is safe.
+ *
+ * Callers cast the return value at the boundary — see \`toBN()\` for the
+ * bigint -> BN conversion that wrappers apply.
  */
+const READ_CACHE_TTL_MS = 30_000
+type CacheEntry = { promise: Promise<unknown>; expires: number }
+const _readCache = new Map<string, CacheEntry>()
+
+function readCacheKey(params: {
+  address: Hex
+  functionName: string
+  args?: readonly unknown[]
+}): string {
+  // JSON.stringify with a replacer that handles bigint — viem args are
+  // frequently bigints (block numbers, amounts) and JSON.stringify throws
+  // on them by default.
+  return JSON.stringify(params, (_k, v) =>
+    typeof v === 'bigint' ? `${v}n` : v
+  )
+}
+
 export function read(params: {
   address: Hex
   abi: readonly any[]
   functionName: string
   args?: readonly unknown[]
 }): Promise<unknown> {
-  return getEthPublicClient().readContract(params as any)
+  const key = readCacheKey(params)
+  const now = Date.now()
+  const existing = _readCache.get(key)
+  if (existing && existing.expires > now) {
+    return existing.promise
+  }
+  const promise = getEthPublicClient().readContract(params as any)
+  // Cache while in-flight + for READ_CACHE_TTL_MS after settling. On
+  // rejection, evict immediately so the next call retries instead of
+  // re-throwing the cached error.
+  _readCache.set(key, { promise, expires: Number.POSITIVE_INFINITY })
+  promise.then(
+    () => {
+      _readCache.set(key, { promise, expires: Date.now() + READ_CACHE_TTL_MS })
+    },
+    () => {
+      _readCache.delete(key)
+    }
+  )
+  return promise
+}
+
+/**
+ * Drop all cached reads. Call after a write that we know mutated state
+ * (e.g., delegateStake / undelegateStake / claimRewards) so subsequent
+ * reads see fresh data instead of the cached pre-write value.
+ */
+export function invalidateReadCache(): void {
+  _readCache.clear()
 }
 
 /** Thin wrapper around `walletClient.writeContract`. Auto-fills `account` + `chain`. */
@@ -283,6 +349,9 @@ export async function writeAndWait(params: {
 }): Promise<TxReceipt> {
   const hash = await write(params)
   const receipt = await getEthPublicClient().waitForTransactionReceipt({ hash })
+  // The write almost certainly mutated state we previously read; clear
+  // the cache so subsequent reads return current values.
+  invalidateReadCache()
   return toLegacyTxReceipt(receipt)
 }
 
