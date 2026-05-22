@@ -30,8 +30,8 @@
   "dependencies": {
     "@apollo/client": "3.3.7",
     "@audius/harmony": "latest",
-    "@audius/sdk": "latest",
-    "@audius/sdk-legacy": "latest",
+    "@audius/eth": "1.0.0",
+    "@audius/sdk": "14.1.0",
     "@audius/stems": "0.3.10",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",

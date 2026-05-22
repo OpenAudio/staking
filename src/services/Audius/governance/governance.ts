@@ -1,4 +1,12 @@
 import BN from 'bn.js'
+import {
+  type Log,
+  type Hex,
+  encodeAbiParameters,
+  hexToString,
+  parseAbiParameters,
+  stringToHex
+} from 'viem'
 
 import {
   GovernanceProposalEvent,
@@ -17,13 +25,27 @@ import {
 } from 'types'
 
 import { AudiusClient } from '../AudiusClient'
+import {
+  asHex,
+  contracts,
+  getConnectedAccount,
+  getEthPublicClient,
+  read,
+  simulate,
+  toBN,
+  toLegacyBlock,
+  writeAndWait
+} from '../eth'
 
-import { RawProposal, RawVoteEvent } from './types'
+import { RawVoteEvent } from './types'
 
-// NOTE: Temporary fix- Set the start query block so that the getPastEvent does not error
+// Some governance event scans can return many logs; allow callers to bound the
+// fromBlock window via env.
 const QUERY_PROPOSAL_START_BLOCK = parseInt(
   import.meta.env.VITE_QUERY_PROPOSAL_START_BLOCK || '0'
 )
+
+type EventLog<TArgs> = Log & { args: TArgs }
 
 export default class Governance {
   public aud: AudiusClient
@@ -34,129 +56,192 @@ export default class Governance {
 
   /* -------------------- Governance Read -------------------- */
 
-  async getProposalById(proposalId: ProposalId) {
+  async getProposalById(proposalId: ProposalId): Promise<Proposal> {
     await this.aud.hasPermissions()
-    const proposal: RawProposal =
-      await this.getContract().getProposalById(proposalId)
-    return formatProposal(proposal)
+    const raw = (await read({
+      ...contracts.governance(),
+      functionName: 'getProposalById',
+      args: [BigInt(proposalId)]
+    })) as readonly [
+      bigint, // proposalId
+      Address, // proposer
+      bigint, // submissionBlockNumber
+      Hex, // targetContractRegistryKey
+      Address, // targetContractAddress
+      bigint, // callValue
+      string, // functionSignature
+      Hex, // callData
+      number, // outcome (uint8)
+      bigint, // voteMagnitudeYes
+      bigint, // voteMagnitudeNo
+      bigint // numVotes
+    ]
+    return {
+      proposalId: Number(raw[0]),
+      proposer: raw[1],
+      submissionBlockNumber: Number(raw[2]),
+      targetContractRegistryKey: raw[3],
+      targetContractAddress: raw[4],
+      callValue: Number(raw[5]),
+      functionSignature: raw[6],
+      callData: raw[7],
+      outcome: proposalOutcomeArr[raw[8]],
+      voteMagnitudeYes: toBN(raw[9]),
+      voteMagnitudeNo: toBN(raw[10]),
+      numVotes: Number(raw[11]),
+      // Consumers (see store/cache/proposals/hooks.ts) overwrite this with
+      // the value from getProposalQuorum(); we initialize to zero so the
+      // Proposal type's `quorum` invariant holds before that assignment.
+      quorum: new BN(0)
+    }
   }
 
+  /**
+   * Looks up the ProposalSubmitted event for a proposal and returns the
+   * fields the legacy SDK exposed (name + description + blockNumber +
+   * proposer). The legacy `queryStartBlock` arg is preserved for callers
+   * but mapped onto viem's `fromBlock`.
+   */
   async getProposalSubmissionById(
     proposalId: ProposalId,
     queryStartBlock = QUERY_PROPOSAL_START_BLOCK
-  ) {
+  ): Promise<ProposalEvent> {
     await this.aud.hasPermissions()
-    const proposal: ProposalEvent =
-      await this.getContract().getProposalSubmission(
-        proposalId,
-        queryStartBlock
-      )
-    return proposal
+    const events = (await getEthPublicClient().getContractEvents({
+      ...contracts.governance(),
+      eventName: 'ProposalSubmitted',
+      args: { _proposalId: BigInt(proposalId) },
+      fromBlock: BigInt(queryStartBlock)
+    } as any)) as unknown as Array<
+      EventLog<{
+        _proposalId: bigint
+        _proposer: Address
+        _name: string
+        _description: string
+      }>
+    >
+    const event = events[0]
+    return {
+      proposalId: Number(event?.args?._proposalId ?? proposalId),
+      proposer: event?.args?._proposer ?? '',
+      submissionBlockNumber: Number(event?.blockNumber ?? 0),
+      blockNumber: Number(event?.blockNumber ?? 0),
+      name: event?.args?._name ?? '',
+      description: event?.args?._description ?? ''
+    }
   }
 
-  async getProposalTargetContractHash(proposalId: ProposalId) {
-    await this.aud.hasPermissions()
-    const contractHash: string =
-      await this.getContract().getProposalTargetContractHash(proposalId)
-    return contractHash
-  }
-
+  /**
+   * Looks up the ProposalOutcomeEvaluated event for a proposal and returns
+   * the block it landed in. The legacy SDK returned the full Block object
+   * via a follow-up eth.getBlock; we keep that here for shape parity.
+   */
   async getProposalEvaluationBlock(
     proposalId: ProposalId,
     queryStartBlock = QUERY_PROPOSAL_START_BLOCK
   ) {
     await this.aud.hasPermissions()
-    const evaluation = await this.getContract().getProposalEvaluation(
-      proposalId,
-      queryStartBlock
+    const events = (await getEthPublicClient().getContractEvents({
+      ...contracts.governance(),
+      eventName: 'ProposalOutcomeEvaluated',
+      args: { _proposalId: BigInt(proposalId) },
+      fromBlock: BigInt(queryStartBlock)
+    } as any)) as unknown as Array<Log>
+    const blockNumber = events[0]?.blockNumber
+    if (blockNumber == null) return null
+    const block = await getEthPublicClient().getBlock({ blockNumber })
+    return toLegacyBlock(block)
+  }
+
+  async getVotingQuorumPercent(): Promise<number> {
+    await this.aud.hasPermissions()
+    return Number(
+      (await read({
+        ...contracts.governance(),
+        functionName: 'getVotingQuorumPercent'
+      })) as bigint
     )
-    const web3 = this.aud.libs.ethWeb3Manager.web3
-    const blockNumber = evaluation[0]?.blockNumber
-    if (!blockNumber) return null
-    const currentBlock = await web3.eth.getBlock(blockNumber)
-    return currentBlock
   }
 
-  async getVotingQuorumPercent() {
+  async getVotingPeriod(): Promise<number> {
     await this.aud.hasPermissions()
-    const percent: number = await this.getContract().getVotingQuorumPercent()
-    return percent
+    return Number(
+      (await read({
+        ...contracts.governance(),
+        functionName: 'getVotingPeriod'
+      })) as bigint
+    )
   }
 
-  async getVotingPeriod() {
+  async getExecutionDelay(): Promise<number> {
     await this.aud.hasPermissions()
-    const period: number = await this.getContract().getVotingPeriod()
-    return period
-  }
-
-  async getExecutionDelay() {
-    await this.aud.hasPermissions()
-    const delay: number = await this.getContract().getExecutionDelay()
-    return delay
-  }
-
-  async getMaxDescriptionLengthBytes() {
-    await this.aud.hasPermissions()
-    const length: number = await this.getContract().getMaxDescriptionLength()
-    return length
+    return Number(
+      (await read({
+        ...contracts.governance(),
+        functionName: 'getExecutionDelay'
+      })) as bigint
+    )
   }
 
   async getVoteByProposalAndVoter(
     proposalId: ProposalId,
     voterAddress: Address
-  ) {
+  ): Promise<Vote | undefined> {
     await this.aud.hasPermissions()
-    const vote: 0 | 1 | 2 = await this.getContract().getVoteByProposalAndVoter({
-      proposalId,
-      voterAddress
-    })
-    return formatVote(vote)
+    const info = (await read({
+      ...contracts.governance(),
+      functionName: 'getVoteInfoByProposalAndVoter',
+      args: [BigInt(proposalId), asHex(voterAddress)]
+    })) as readonly [number, bigint] // (vote, voteMagnitude)
+    return formatVote(info[0] as 0 | 1 | 2)
   }
 
-  async getVoteByProposalForOwner(proposalId: ProposalId) {
+  async getVoteByProposalForOwner(
+    proposalId: ProposalId
+  ): Promise<Vote | undefined> {
     await this.aud.hasPermissions()
-    const ownerWallet = this.aud.libs.ethWeb3Manager.ownerWallet
-    return this.getVoteByProposalAndVoter(proposalId, ownerWallet)
+    const owner = getConnectedAccount()
+    if (!owner) return undefined
+    return this.getVoteByProposalAndVoter(proposalId, owner)
   }
 
-  /** Gets all vote submission events for a given proposal */
+  /** All vote submission events for the given proposal. */
   async getVotesForProposal(
     proposalId: ProposalId,
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
-  ) {
+  ): Promise<VoteEvent[]> {
     await this.aud.hasPermissions()
-    const votes: RawVoteEvent[] = await this.getContract().getVotes({
-      proposalId,
+    return this.getVoteEvents(
+      'ProposalVoteSubmitted',
+      { _proposalId: BigInt(proposalId) },
       queryStartBlock
-    })
-    return votes.map(formatVoteEvent).filter(Boolean) as VoteEvent[]
+    )
   }
 
-  /** Gets all vote update events for a given proposal */
+  /** All vote update events for the given proposal. */
   async getVoteUpdatesForProposal(
     proposalId: ProposalId,
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
-  ) {
+  ): Promise<VoteEvent[]> {
     await this.aud.hasPermissions()
-    const votes: RawVoteEvent[] = await this.getContract().getVoteUpdates({
-      proposalId,
+    return this.getVoteEvents(
+      'ProposalVoteUpdated',
+      { _proposalId: BigInt(proposalId) },
       queryStartBlock
-    })
-    return votes.map(formatVoteEvent).filter(Boolean) as VoteEvent[]
+    )
   }
 
-  /** Gets all vote submission events on any proposal by addresses */
+  /** All vote submissions by any of the given addresses. */
   async getVotesByAddress(
     addresses: Address[],
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
-  ) {
+  ): Promise<VoteEvent[]> {
     await this.aud.hasPermissions()
-    const votes: RawVoteEvent[] =
-      await this.getContract().getVoteSubmissionsByAddress({
-        addresses,
-        queryStartBlock
-      })
-    return votes.map(formatVoteEvent).filter(Boolean) as VoteEvent[]
+    return this.getVoteEvents(
+      'ProposalVoteSubmitted',
+      { _voter: addresses.map(asHex) },
+      queryStartBlock
+    )
   }
 
   async getVoteEventsByAddress(
@@ -164,24 +249,19 @@ export default class Governance {
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
   ): Promise<GovernanceVoteEvent[]> {
     const votes = await this.getVotesByAddress(addresses, queryStartBlock)
-    return votes.map((v) => ({
-      ...v,
-      _type: 'GovernanceVote'
-    }))
+    return votes.map((v) => ({ ...v, _type: 'GovernanceVote' }))
   }
 
-  /** Gets all vote update events on any proposal by addresses */
   async getVoteUpdatesByAddress(
     addresses: Address[],
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
-  ) {
+  ): Promise<VoteEvent[]> {
     await this.aud.hasPermissions()
-    const votes: RawVoteEvent[] =
-      await this.getContract().getVoteUpdatesByAddress({
-        addresses,
-        queryStartBlock
-      })
-    return votes.map(formatVoteEvent).filter(Boolean) as VoteEvent[]
+    return this.getVoteEvents(
+      'ProposalVoteUpdated',
+      { _voter: addresses.map(asHex) },
+      queryStartBlock
+    )
   }
 
   async getVoteUpdateEventsByAddress(
@@ -189,75 +269,104 @@ export default class Governance {
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
   ): Promise<GovernanceVoteUpdateEvent[]> {
     const votes = await this.getVoteUpdatesByAddress(addresses, queryStartBlock)
-    return votes.map((v) => ({
-      ...v,
-      _type: 'GovernanceVoteUpdate'
-    }))
+    return votes.map((v) => ({ ...v, _type: 'GovernanceVoteUpdate' }))
   }
 
-  async getProposals(queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK) {
-    await this.aud.hasPermissions()
-    const proposals = await this.getContract().getProposals(queryStartBlock)
-    return proposals
-  }
-
-  async getInProgressProposalIds(
+  /** All ProposalSubmitted events since `queryStartBlock`. */
+  async getProposals(
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
-  ) {
+  ): Promise<ProposalEvent[]> {
     await this.aud.hasPermissions()
-    const proposals: ProposalId[] = (
-      await this.getContract().getInProgressProposals(queryStartBlock)
-    ).map((p: string) => parseInt(p))
-    return proposals
+    return this.getProposalEvents(undefined, queryStartBlock)
   }
 
+  /** In-progress proposal ids per on-chain `getInProgressProposals`. */
+  async getInProgressProposalIds(): Promise<ProposalId[]> {
+    await this.aud.hasPermissions()
+    const ids = (await read({
+      ...contracts.governance(),
+      functionName: 'getInProgressProposals'
+    })) as readonly bigint[]
+    return ids.map((id) => Number(id))
+  }
+
+  /** ProposalSubmitted events filtered to the given proposer addresses. */
   async getProposalsForAddresses(
     addresses: Address[],
     queryStartBlock: number = QUERY_PROPOSAL_START_BLOCK
   ): Promise<GovernanceProposalEvent[]> {
     await this.aud.hasPermissions()
-    const proposals: ProposalEvent[] =
-      await this.getContract().getProposalsForAddresses(
-        addresses,
-        queryStartBlock
-      )
-    return proposals.map((p) => ({
-      ...p,
-      _type: 'GovernanceProposal'
-    }))
+    const proposals = await this.getProposalEvents(
+      { _proposer: addresses.map(asHex) },
+      queryStartBlock
+    )
+    return proposals.map((p) => ({ ...p, _type: 'GovernanceProposal' }))
   }
 
+  /**
+   * Quorum is (total staked at submission block) * quorumPercent / 100. The
+   * legacy SDK exposed `calculateQuorum(id)` as an on-chain helper; the modern
+   * Governance ABI no longer ships it, so we compose from Staking +
+   * Governance reads.
+   */
   async getProposalQuorum(proposalId: number): Promise<BN> {
     await this.aud.hasPermissions()
-    const quorumAmount: BN =
-      await this.getContract().calculateQuorum(proposalId)
-    return quorumAmount
+    const proposal = await this.getProposalById(proposalId)
+    const totalStakedAt = await this.aud.Staking.totalStakedAt(
+      proposal.submissionBlockNumber
+    )
+    const quorumPct = await this.getVotingQuorumPercent()
+    return totalStakedAt.mul(new BN(quorumPct)).div(new BN(100))
   }
 
   /* -------------------- Governance Write -------------------- */
 
+  /**
+   * Submit a proposal. The on-chain function returns the new proposalId,
+   * which we capture via a pre-flight simulation so consumers get the legacy
+   * return shape without parsing receipt logs.
+   *
+   * `callData` is accepted as either an array of raw argument values (the
+   * legacy SDK's shape — it encoded internally based on functionSignature)
+   * or a pre-encoded hex blob. When given an array we ABI-encode it here
+   * using the parameter types parsed out of `functionSignature`.
+   */
   async submitProposal(args: {
     targetContractName: string
     functionSignature: string
-    callData: any[]
+    callData: Hex | unknown[]
     name: string
     description: string
-  }) {
-    // Current callValue is always 0. Changing this is unsupported.
-    const proposal = {
-      targetContractRegistryKey:
-        this.aud.libs.ethWeb3Manager.web3.utils.utf8ToHex(
-          args.targetContractName
-        ),
-      functionSignature: args.functionSignature,
-      callData: args.callData,
-      callValue: new BN(0),
-      name: args.name,
-      description: args.description
-    }
+  }): Promise<ProposalId> {
     await this.aud.hasPermissions(Permission.WRITE)
-    const id: ProposalId = await this.getContract().submitProposal(proposal)
-    return id
+    const owner = getConnectedAccount()
+    if (!owner) throw new Error('No connected account')
+    const registryKey = stringToHex(args.targetContractName, { size: 32 })
+    const encodedCallData =
+      typeof args.callData === 'string'
+        ? args.callData
+        : encodeCallData(args.functionSignature, args.callData)
+    const proposalArgs = [
+      registryKey,
+      0n, // callValue: currently always 0
+      args.functionSignature,
+      encodedCallData,
+      args.name,
+      args.description
+    ] as const
+
+    const { result: idBig } = (await simulate({
+      ...contracts.governance(),
+      functionName: 'submitProposal',
+      args: proposalArgs as unknown as readonly unknown[],
+      account: owner as Hex
+    })) as { result: bigint }
+    await writeAndWait({
+      ...contracts.governance(),
+      functionName: 'submitProposal',
+      args: proposalArgs as unknown as readonly unknown[]
+    })
+    return Number(idBig)
   }
 
   async submitVote({
@@ -266,11 +375,12 @@ export default class Governance {
   }: {
     proposalId: ProposalId
     vote: Vote
-  }) {
+  }): Promise<void> {
     await this.aud.hasPermissions(Permission.WRITE)
-    await this.getContract().submitVote({
-      proposalId,
-      vote: createRawVote(vote)
+    await writeAndWait({
+      ...contracts.governance(),
+      functionName: 'submitVote',
+      args: [BigInt(proposalId), createRawVote(vote)]
     })
   }
 
@@ -280,30 +390,90 @@ export default class Governance {
   }: {
     proposalId: ProposalId
     vote: Vote
-  }) {
+  }): Promise<void> {
     await this.aud.hasPermissions(Permission.WRITE)
-    await this.getContract().updateVote({
-      proposalId,
-      vote: createRawVote(vote)
+    await writeAndWait({
+      ...contracts.governance(),
+      functionName: 'updateVote',
+      args: [BigInt(proposalId), createRawVote(vote)]
     })
   }
 
-  async evaluateProposalOutcome({ proposalId }: { proposalId: ProposalId }) {
+  async evaluateProposalOutcome({
+    proposalId
+  }: {
+    proposalId: ProposalId
+  }): Promise<void> {
     await this.aud.hasPermissions(Permission.WRITE)
-    await this.getContract().evaluateProposalOutcome(proposalId)
+    await writeAndWait({
+      ...contracts.governance(),
+      functionName: 'evaluateProposalOutcome',
+      args: [BigInt(proposalId)]
+    })
   }
 
-  // Helpers
+  /* -------------------- Internal event helpers -------------------- */
 
-  getContract() {
-    return this.aud.libs.ethContracts.GovernanceClient
+  private async getVoteEvents(
+    eventName: 'ProposalVoteSubmitted' | 'ProposalVoteUpdated',
+    args: Record<string, unknown>,
+    fromBlock: number
+  ): Promise<VoteEvent[]> {
+    const events = (await getEthPublicClient().getContractEvents({
+      ...contracts.governance(),
+      eventName,
+      args,
+      fromBlock: BigInt(fromBlock)
+    } as any)) as unknown as Array<
+      EventLog<{
+        _proposalId: bigint
+        _voter: Address
+        _vote: number
+        _voterStake: bigint
+      }>
+    >
+    const raw: RawVoteEvent[] = events.map((e) => ({
+      proposalId: Number(e.args._proposalId),
+      voter: e.args._voter,
+      vote: (e.args._vote === 1 ? 1 : 2) as 1 | 2,
+      voterStake: toBN(e.args._voterStake),
+      blockNumber: Number(e.blockNumber)
+    }))
+    return raw.map(formatVoteEvent).filter(Boolean) as VoteEvent[]
+  }
+
+  private async getProposalEvents(
+    args: Record<string, unknown> | undefined,
+    fromBlock: number
+  ): Promise<ProposalEvent[]> {
+    const events = (await getEthPublicClient().getContractEvents({
+      ...contracts.governance(),
+      eventName: 'ProposalSubmitted',
+      args,
+      fromBlock: BigInt(fromBlock)
+    } as any)) as unknown as Array<
+      EventLog<{
+        _proposalId: bigint
+        _proposer: Address
+        _name: string
+        _description: string
+      }>
+    >
+    return events.map((e) => ({
+      proposalId: Number(e.args._proposalId),
+      proposer: e.args._proposer,
+      submissionBlockNumber: Number(e.blockNumber),
+      blockNumber: Number(e.blockNumber),
+      name: e.args._name,
+      description: e.args._description
+    }))
   }
 }
 
-/* Helpers */
+/* -------------------- Formatting helpers -------------------- */
 
-// Maps from index (proposal outcome raw value) to Outcome
-const proposalOutcomeArr = [
+// Maps from index (proposal outcome raw value) to Outcome enum.
+const proposalOutcomeArr: Outcome[] = [
   Outcome.InProgress,
   Outcome.Rejected,
   Outcome.ApprovedExecuted,
@@ -315,39 +485,36 @@ const proposalOutcomeArr = [
   Outcome.TargetContractCodeHashChanged
 ]
 
-// Create a proposal from a RawProposal
-const formatProposal = (proposal: RawProposal): Proposal => {
-  const outcome = proposalOutcomeArr[proposal.outcome]
-  return {
-    ...proposal,
-    outcome
-  }
-}
-
 const formatVote = (rawVote: 0 | 1 | 2): Vote | undefined => {
   if (rawVote === 0) return undefined
-  const voteMap = {
-    1: Vote.No,
-    2: Vote.Yes
-  }
+  const voteMap = { 1: Vote.No, 2: Vote.Yes }
   return voteMap[rawVote]
 }
 
-// Create a VoteEvent from a RawVoteEvent
 const formatVoteEvent = (voteEvent: RawVoteEvent): VoteEvent | undefined => {
   const vote = formatVote(voteEvent.vote)
   if (!vote) return undefined
-  return {
-    ...voteEvent,
-    vote
-  }
+  return { ...voteEvent, vote }
 }
 
-// Create a RawVote (number) from Vote (string enum)
 const createRawVote = (vote: Vote): 1 | 2 => {
-  const voteMap = {
-    [Vote.No]: 1,
-    [Vote.Yes]: 2
-  } as { [vote: string]: 1 | 2 }
+  const voteMap = { [Vote.No]: 1, [Vote.Yes]: 2 } as {
+    [vote: string]: 1 | 2
+  }
   return voteMap[vote]
+}
+
+// Re-exported for legacy callers that pull from helpers.ts via this module.
+export { hexToString }
+
+/**
+ * ABI-encode an array of arg values against the parameter types parsed out
+ * of a Solidity-style function signature. e.g. signature `slash(uint256,
+ * address)` + values `[100n, '0xabc...']` -> the 64-byte hex blob the
+ * Governance contract expects as `_callData`.
+ */
+function encodeCallData(functionSignature: string, values: unknown[]): Hex {
+  const inside = functionSignature.split('(')[1]?.split(')')[0] ?? ''
+  if (!inside.trim()) return '0x' as Hex
+  return encodeAbiParameters(parseAbiParameters(inside), values as any)
 }

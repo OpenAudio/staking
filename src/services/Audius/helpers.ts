@@ -1,10 +1,17 @@
 import BN from 'bn.js'
+import { decodeAbiParameters, getAddress, type AbiParameter } from 'viem'
 
 import { BigNumber, Permission, Proposal } from 'types'
 import { fetchWithTimeout } from 'utils/fetch'
 import { formatAudString, formatNumber } from 'utils/format'
 
 import AudiusClient from './AudiusClient'
+import {
+  asHex,
+  getConnectedAccount,
+  getEthPublicClient,
+  toLegacyBlock
+} from './eth'
 
 // Helpers
 export async function hasPermissions(
@@ -46,44 +53,52 @@ export async function awaitSetup(this: AudiusClient): Promise<void> {
   return this.isSetupPromise
 }
 
-export async function getEthBlockNumber(this: AudiusClient) {
+export async function getEthBlockNumber(this: AudiusClient): Promise<number> {
   await this.hasPermissions()
-  return this.libs.ethWeb3Manager.web3.eth.getBlockNumber()
+  const blockNumber = await getEthPublicClient().getBlockNumber()
+  return Number(blockNumber)
 }
 
-export async function getEthWallet(this: AudiusClient) {
+export async function getEthWallet(
+  this: AudiusClient
+): Promise<string | undefined> {
   await this.hasPermissions()
-  return this.libs.ethWeb3Manager.ownerWallet
+  return getConnectedAccount()
 }
 
 export async function isEoa(this: AudiusClient, wallet: string) {
-  const web3 = this.libs.ethWeb3Manager.web3
-  const code = await web3.eth.getCode(wallet)
-  return code === '0x'
+  const code = await getEthPublicClient().getCode({ address: asHex(wallet) })
+  // viem returns undefined for accounts with no bytecode (EOAs).
+  return code === undefined || code === '0x'
 }
 
-export async function getAverageBlockTime(this: AudiusClient) {
+export async function getAverageBlockTime(this: AudiusClient): Promise<number> {
   await this.hasPermissions()
-  const web3 = this.libs.ethWeb3Manager.web3
+  const publicClient = getEthPublicClient()
   const span = 1000
-  const currentNumber = await web3.eth.getBlockNumber()
-  const currentBlock = await web3.eth.getBlock(currentNumber)
+  const currentNumber = Number(await publicClient.getBlockNumber())
+  const currentBlock = await publicClient.getBlock({
+    blockNumber: BigInt(currentNumber)
+  })
   let firstBlock
   try {
-    firstBlock = await web3.eth.getBlock(currentNumber - span)
+    firstBlock = await publicClient.getBlock({
+      blockNumber: BigInt(currentNumber - span)
+    })
   } catch (e) {
-    firstBlock = await web3.eth.getBlock(1)
+    firstBlock = await publicClient.getBlock({ blockNumber: 1n })
   }
   return Math.round(
-    (currentBlock.timestamp - firstBlock.timestamp) / (span * 1.0)
+    (Number(currentBlock.timestamp) - Number(firstBlock.timestamp)) / span
   )
 }
 
 export async function getBlock(this: AudiusClient, blockNumber: number) {
   await this.hasPermissions()
-  const web3 = this.libs.ethWeb3Manager.web3
-  const block = await web3.eth.getBlock(blockNumber)
-  return block
+  const block = await getEthPublicClient().getBlock({
+    blockNumber: BigInt(blockNumber)
+  })
+  return toLegacyBlock(block)
 }
 
 export async function getBlockNearTimestamp(
@@ -93,21 +108,22 @@ export async function getBlockNearTimestamp(
   timestamp: number
 ) {
   await this.hasPermissions()
-  const web3 = this.libs.ethWeb3Manager.web3
+  const publicClient = getEthPublicClient()
   const now = new Date()
   const then = new Date(timestamp)
   // @ts-ignore: date subtraction works
   const seconds = (now - then) / 1000
   const blocks = Math.round(seconds / averageBlockTime)
   const targetNumber = Math.max(currentBlockNumber - blocks, 0)
-  const targetBlock = await web3.eth.getBlock(targetNumber)
-  return targetBlock
+  const block = await publicClient.getBlock({
+    blockNumber: BigInt(targetNumber)
+  })
+  return toLegacyBlock(block)
 }
 
 export async function toChecksumAddress(this: AudiusClient, wallet: string) {
   await this.awaitSetup()
-  const web3 = this.libs.ethWeb3Manager.web3
-  return web3.utils.toChecksumAddress(wallet)
+  return getAddress(wallet)
 }
 
 // Static Helpers
@@ -214,10 +230,25 @@ export async function getValidatorMetadata(
   }
 }
 
-export function decodeCallData(types: string[], callData: string) {
-  // TODO: Like methods above and throughout, move to better pattern
-  const web3 = window.audiusLibs.ethWeb3Manager!.web3
-  return web3.eth.abi.decodeParameters(types, callData)
+/**
+ * Decode an ABI-encoded call data blob into a positional array.
+ *
+ * The legacy implementation used web3.js's `eth.abi.decodeParameters` which
+ * returned an object with both positional and named keys plus a magic
+ * `__length__` field; consumers then called `Object.values(decoded)` to get
+ * back a positional array. viem's `decodeAbiParameters` returns the
+ * positional tuple directly, so we project the same result without the
+ * `__length__` dance.
+ *
+ * `types` is the legacy Solidity-style array (e.g. `['address', 'uint256']`).
+ */
+export function decodeCallData(types: string[], callData: string): unknown[] {
+  const params: AbiParameter[] = types.map((type) => ({ type }))
+  const decoded = decodeAbiParameters(
+    params,
+    callData as `0x${string}`
+  ) as unknown as unknown[]
+  return [...decoded]
 }
 
 export function decodeProposalCallData(proposal: Proposal) {
@@ -228,15 +259,9 @@ export function decodeProposalCallData(proposal: Proposal) {
   if (!types) {
     return null
   }
-  const decoded: { [key: string]: string } = AudiusClient.decodeCallData(
-    types,
-    proposal.callData
-  )
-  delete decoded.__length__
-
-  const parsedCallData = Object.values(decoded)
+  const parsedCallData = AudiusClient.decodeCallData(types, proposal.callData)
   if (functionName === 'slash') {
-    parsedCallData[0] = new BN(parsedCallData[0]).toString() + '(wei)'
+    parsedCallData[0] = new BN(String(parsedCallData[0])).toString() + '(wei)'
   }
   const joinedCallData = parsedCallData.join(',')
   return joinedCallData

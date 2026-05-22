@@ -1,30 +1,21 @@
-import BN from 'bn.js'
+import { type Log } from 'viem'
 
 import { ClaimProcessedEvent } from 'models/TimelineEvents'
-import { BlockNumber, Address } from 'types'
+import { BlockNumber, Address, TxReceipt } from 'types'
 
 import { AudiusClient } from '../AudiusClient'
+import {
+  asHex,
+  contracts,
+  EVENT_QUERY_START_BLOCK,
+  getEthPublicClient,
+  read,
+  toBN,
+  writeAndWait
+} from '../eth'
 
-import { GetClaimProcessedResponse } from './types'
-
-export interface TransactionReceipt {
-  status: boolean
-  transactionHash: string
-  transactionIndex: number
-  blockHash: string
-  blockNumber: number
-  from: string
-  to: string
-  contractAddress?: string
-  cumulativeGasUsed: number
-  gasUsed: number
-  effectiveGasPrice: number
-  logs: any[]
-  logsBloom: string
-  events?: {
-    [eventName: string]: any
-  }
-}
+/** Re-export the dashboard's TxReceipt shape so existing imports keep working. */
+export type TransactionReceipt = TxReceipt
 
 export default class Claim {
   aud: AudiusClient
@@ -33,108 +24,154 @@ export default class Claim {
     this.aud = aud
   }
 
-  getContract() {
-    return this.aud.libs.ethContracts.ClaimsManagerClient
-  }
-
   /* -------------------- Claims Manager Client Read -------------------- */
 
-  // Get the duration of a funding round in blocks
+  /** Duration of a funding round in blocks. */
   async getFundingRoundBlockDiff(): Promise<BlockNumber> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().getFundingRoundBlockDiff()
-    return info
+    const info = (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getFundingRoundBlockDiff'
+    })) as bigint
+    return Number(info)
   }
 
-  // Get the last block where a funding round was initiated
+  /** Last block where a funding round was initiated. */
   async getLastFundedBlock(): Promise<BlockNumber> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().getLastFundedBlock()
-    return info
+    const info = (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getLastFundedBlock'
+    })) as bigint
+    return Number(info)
   }
 
-  // Get the amount funded per round in wei
-  async getFundsPerRound(): Promise<BN> {
+  /** Amount funded per round in wei. */
+  async getFundsPerRound() {
     await this.aud.hasPermissions()
-    const claimAmount = await this.getContract().getFundsPerRound()
-    return new BN(claimAmount)
+    const claimAmount = (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getFundsPerRound'
+    })) as bigint
+    return toBN(claimAmount)
   }
 
-  // Get the total amount claimed in the current round
-  async getTotalClaimedInRound(): Promise<BN> {
+  /** Total amount claimed in the current round. */
+  async getTotalClaimedInRound() {
     await this.aud.hasPermissions()
-    const info = await this.getContract().getTotalClaimedInRound()
-    return info
+    const info = (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getTotalClaimedInRound'
+    })) as bigint
+    return toBN(info)
   }
 
-  // Get the Governance address
   async getGovernanceAddress(): Promise<Address> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().getGovernanceAddress()
-    return info
+    return (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getGovernanceAddress'
+    })) as Address
   }
 
-  // Get the ServiceProviderFactory address
   async getServiceProviderFactoryAddress(): Promise<Address> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().getServiceProviderFactoryAddress()
-    return info
+    return (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getServiceProviderFactoryAddress'
+    })) as Address
   }
 
-  // Get the DelegateManager address
   async getDelegateManagerAddress(): Promise<Address> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().getDelegateManagerAddress()
-    return info
+    return (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getDelegateManagerAddress'
+    })) as Address
   }
 
-  // Get the Staking address
   async getStakingAddress(): Promise<Address> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().getStakingAddress()
-    return info
+    return (await read({
+      ...contracts.claimsManager(),
+      functionName: 'getStakingAddress'
+    })) as Address
   }
 
-  // Returns boolean indicating whether a claim is considered pending
+  /** Is a claim currently pending for the given service provider address? */
   async claimPending(address: Address): Promise<boolean> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().claimPending(address)
-    return info
+    return (await read({
+      ...contracts.claimsManager(),
+      functionName: 'claimPending',
+      args: [asHex(address)]
+    })) as boolean
   }
 
-  // Returns transaction receipt
-  async initiateRound(): Promise<TransactionReceipt> {
-    await this.aud.hasPermissions()
-    await this.getContract().init()
-    const info = await this.getContract().initiateRound()
-    return info
-  }
+  /* -------------------- Claims Manager Client Write -------------------- */
 
-  async getCurrentRound() {
+  /**
+   * Initiates a new funding round on-chain. Anyone may call this once the
+   * previous round's block window has elapsed.
+   */
+  async initiateRound(): Promise<TxReceipt> {
     await this.aud.hasPermissions()
-    await this.getContract().init()
-    const contractAddress = this.getContract()._contractAddress
-    const latestFundedBlockNumber = await this.getLastFundedBlock()
-    const logs = await this.aud.libs.ethWeb3Manager.getWeb3().eth.getPastLogs({
-      address: contractAddress,
-      fromBlock: latestFundedBlockNumber,
-      toBlock: latestFundedBlockNumber
+    return writeAndWait({
+      ...contracts.claimsManager(),
+      functionName: 'initiateRound'
     })
-    const roundNumber = logs?.[1].topics?.[2]
-    return roundNumber ? parseInt(roundNumber, 16) : null
   }
 
+  /* -------------------- Event helpers -------------------- */
+
+  /**
+   * Returns the round number of the last initiated funding round by inspecting
+   * the most recent `RoundInitiated` event from the ClaimsManager.
+   */
+  async getCurrentRound(): Promise<number | null> {
+    await this.aud.hasPermissions()
+    const latestFundedBlockNumber = await this.getLastFundedBlock()
+    const events = await getEthPublicClient().getContractEvents({
+      ...contracts.claimsManager(),
+      eventName: 'RoundInitiated',
+      fromBlock: BigInt(latestFundedBlockNumber),
+      toBlock: BigInt(latestFundedBlockNumber)
+    } as any)
+    const event = events[0] as
+      | (Log & { args?: { _roundNumber?: bigint } })
+      | undefined
+    return event?.args?._roundNumber != null
+      ? Number(event.args._roundNumber)
+      : null
+  }
+
+  /** All ClaimProcessed events emitted with the given claimer. */
   async getClaimProcessedEvents(
     claimer: Address
   ): Promise<ClaimProcessedEvent[]> {
     await this.aud.hasPermissions()
-    const info: GetClaimProcessedResponse[] =
-      await this.getContract().getClaimProcessedEvents({
-        claimer
-      })
-    return info.map((e) => ({
-      ...e,
-      _type: 'ClaimProcessed'
+    const events = (await getEthPublicClient().getContractEvents({
+      ...contracts.claimsManager(),
+      eventName: 'ClaimProcessed',
+      args: { _claimer: asHex(claimer) },
+      fromBlock: EVENT_QUERY_START_BLOCK
+    } as any)) as unknown as Array<
+      Log & {
+        args: {
+          _claimer: Address
+          _rewards: bigint
+          _oldTotal: bigint
+          _newTotal: bigint
+        }
+      }
+    >
+    return events.map((e) => ({
+      _type: 'ClaimProcessed',
+      blockNumber: Number(e.blockNumber),
+      claimer: e.args._claimer,
+      rewards: toBN(e.args._rewards),
+      oldTotal: toBN(e.args._oldTotal),
+      newTotal: toBN(e.args._newTotal)
     }))
   }
 }
