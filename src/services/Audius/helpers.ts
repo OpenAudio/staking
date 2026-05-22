@@ -9,7 +9,8 @@ import AudiusClient from './AudiusClient'
 import {
   asHex,
   getConnectedAccount,
-  getEthPublicClient
+  getEthPublicClient,
+  toLegacyBlock
 } from './eth'
 
 // Helpers
@@ -94,7 +95,10 @@ export async function getAverageBlockTime(this: AudiusClient): Promise<number> {
 
 export async function getBlock(this: AudiusClient, blockNumber: number) {
   await this.hasPermissions()
-  return getEthPublicClient().getBlock({ blockNumber: BigInt(blockNumber) })
+  const block = await getEthPublicClient().getBlock({
+    blockNumber: BigInt(blockNumber)
+  })
+  return toLegacyBlock(block)
 }
 
 export async function getBlockNearTimestamp(
@@ -111,7 +115,10 @@ export async function getBlockNearTimestamp(
   const seconds = (now - then) / 1000
   const blocks = Math.round(seconds / averageBlockTime)
   const targetNumber = Math.max(currentBlockNumber - blocks, 0)
-  return publicClient.getBlock({ blockNumber: BigInt(targetNumber) })
+  const block = await publicClient.getBlock({
+    blockNumber: BigInt(targetNumber)
+  })
+  return toLegacyBlock(block)
 }
 
 export async function toChecksumAddress(this: AudiusClient, wallet: string) {

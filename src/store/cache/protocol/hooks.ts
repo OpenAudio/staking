@@ -221,11 +221,13 @@ export const useBlock = (blockNumber: number) => {
   const [block, setBlock] = useState<Block>(null)
   useEffect(() => {
     const fetchBlock = async () => {
-      const { getEthPublicClient } = await import('services/Audius/eth')
+      const { getEthPublicClient, toLegacyBlock } = await import(
+        'services/Audius/eth'
+      )
       const b = await getEthPublicClient().getBlock({
         blockNumber: BigInt(blockNumber)
       })
-      setBlock(b)
+      setBlock(toLegacyBlock(b))
     }
     fetchBlock()
   }, [blockNumber, setBlock])

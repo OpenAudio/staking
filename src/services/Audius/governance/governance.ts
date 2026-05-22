@@ -33,6 +33,7 @@ import {
   read,
   simulate,
   toBN,
+  toLegacyBlock,
   writeAndWait
 } from '../eth'
 
@@ -148,7 +149,8 @@ export default class Governance {
     } as any)) as unknown as Array<Log>
     const blockNumber = events[0]?.blockNumber
     if (blockNumber == null) return null
-    return getEthPublicClient().getBlock({ blockNumber })
+    const block = await getEthPublicClient().getBlock({ blockNumber })
+    return toLegacyBlock(block)
   }
 
   async getVotingQuorumPercent(): Promise<number> {

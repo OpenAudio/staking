@@ -71,6 +71,7 @@ import BN from 'bn.js'
 import {
   createWalletClient,
   custom,
+  type Block as ViemBlock,
   type EIP1193Provider,
   type Hex,
   type TransactionReceipt as ViemTxReceipt,
@@ -289,3 +290,33 @@ export const toBN = (value: bigint | number | string): BN =>
 /** Inverse of `toBN` for write paths that need `bigint` args. */
 export const toBig = (value: BN | bigint | number | string): bigint =>
   typeof value === 'bigint' ? value : BigInt(value.toString())
+
+/**
+ * Project a viem `Block` to the legacy web3.js block shape consumers expect:
+ * `bigint` fields (timestamp, number, gasUsed, ...) become regular `number`s.
+ *
+ * Required because consumer code does things like
+ * `timestampB - timestampA` inside `Array.sort` comparators — `bigint - bigint`
+ * yields a bigint, which the sort runtime can't coerce to a comparison
+ * number, throwing `TypeError: Cannot convert a BigInt value to a number`.
+ */
+export function toLegacyBlock(block: ViemBlock): any {
+  if (!block) return block
+  const out: any = { ...block }
+  for (const key of [
+    'baseFeePerGas',
+    'blobGasUsed',
+    'difficulty',
+    'excessBlobGas',
+    'gasLimit',
+    'gasUsed',
+    'number',
+    'size',
+    'timestamp',
+    'totalDifficulty'
+  ] as const) {
+    const v = (block as any)[key]
+    if (typeof v === 'bigint') out[key] = Number(v)
+  }
+  return out
+}
