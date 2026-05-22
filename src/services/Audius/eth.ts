@@ -69,11 +69,14 @@ import {
 import { sdk } from '@audius/sdk'
 import BN from 'bn.js'
 import {
+  createPublicClient,
   createWalletClient,
   custom,
+  http,
   type Block as ViemBlock,
   type EIP1193Provider,
   type Hex,
+  type PublicClient,
   type TransactionReceipt as ViemTxReceipt,
   type WalletClient
 } from 'viem'
@@ -93,7 +96,39 @@ const baseConfig = {
   environment: env
 } as const
 
-let _sdk: AudiusEthSdk = sdk(baseConfig)
+/**
+ * Build a batched viem `PublicClient` to inject as `services.ethPublicClient`.
+ *
+ * The sdk's default `ethPublicClient` uses `http()` with no batching, so a
+ * page load that fans out hundreds of `eth_call`s (fetchValidators +
+ * fetchContentNodes + fetchDiscoveryProviders' `getServiceProviderList`
+ * fan-out, plus per-user `formatUser` reads) becomes hundreds of separate
+ * POSTs to eth-client.audius.co. The legacy @audius/sdk-legacy did this
+ * via multicall, which is how the dashboard on main stays quiet.
+ *
+ * viem's `http(url, { batch: ... })` collects every `eth_call` fired in the
+ * same microtask (or up to `wait` ms) into one JSON-RPC batch request. This
+ * collapses the RPC volume by ~50x for the typical fan-out (Promise.all of
+ * N parallel reads) without any call-site changes.
+ */
+function buildBatchedEthPublicClient(): PublicClient {
+  const rpcEndpoint = import.meta.env.VITE_ETH_PROVIDER_URL as string | undefined
+  // Cast: viem's PublicClient type encodes the `account` field as
+  // `undefined`; `createPublicClient`'s return widens that — fine at
+  // runtime but tsc balks. Type identity isn't important here since this
+  // client is only consumed via the sdk's ServicesContainer.
+  return createPublicClient({
+    chain: mainnet,
+    transport: http(rpcEndpoint, {
+      batch: { batchSize: 100, wait: 16 }
+    })
+  }) as unknown as PublicClient
+}
+
+let _sdk: AudiusEthSdk = sdk({
+  ...baseConfig,
+  services: { ethPublicClient: buildBatchedEthPublicClient() as any }
+})
 
 /** The current @audius/sdk instance (read-only until `attachSigner` runs). */
 export function getEthSdk(): AudiusEthSdk {
@@ -135,9 +170,12 @@ export function attachSigner({
   _sdk = sdk({
     ...baseConfig,
     services: {
-      // viem types come from two node_modules locations (ours and the one
-      // nested inside @audius/sdk). They're identical at runtime but tsc
-      // treats them as nominally distinct, so we cast at the boundary.
+      // Re-inject the batched public client so writes (which still do
+      // reads for nonce / gas estimation / waitForTransactionReceipt) stay
+      // batched too. viem types come from two node_modules locations (ours
+      // and the one nested inside @audius/sdk) — identical at runtime but
+      // tsc treats them as nominally distinct, so cast at the boundary.
+      ethPublicClient: buildBatchedEthPublicClient() as any,
       ethWalletClient: walletClient as any
     }
   })
