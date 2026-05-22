@@ -56,7 +56,20 @@ import {
   Staking,
   TrustedNotifierManager
 } from '@audius/eth'
-import { createSdkWithServices } from '@audius/sdk'
+// `createSdkWithServices` ships in the @audius/sdk@14.1.0 runtime bundle
+// (dist/index.cjs.js / dist/index.esm.js) but isn't re-exported from the
+// package's top-level `dist/index.d.ts`. We import the runtime symbol from
+// the top level via a property-access cast, and pull the type from the
+// published subpath declaration. (sdk@15.x re-exports the function at the
+// top level but drops `OAUTH_URL`, which the OAuth profile-link flow in
+// useConnectAudiusProfile.ts still imports — 14.1.0 is the newest version
+// that has both.)
+import * as audiusSdk from '@audius/sdk'
+import type { createSdkWithServices as CreateSdkWithServicesFn } from '@audius/sdk/dist/sdk/createSdkWithServices'
+
+const createSdkWithServices = (audiusSdk as unknown as {
+  createSdkWithServices: typeof CreateSdkWithServicesFn
+}).createSdkWithServices
 import BN from 'bn.js'
 import {
   createWalletClient,
@@ -70,7 +83,7 @@ import { mainnet } from 'viem/chains'
 
 import type { Address, TxReceipt } from 'types'
 
-type AudiusEthSdk = ReturnType<typeof createSdkWithServices>
+type AudiusEthSdk = ReturnType<typeof CreateSdkWithServicesFn>
 
 const env = import.meta.env.VITE_ENVIRONMENT as
   | 'development'
@@ -124,7 +137,10 @@ export function attachSigner({
   _sdk = createSdkWithServices({
     ...baseConfig,
     services: {
-      ethWalletClient: walletClient
+      // viem types come from two node_modules locations (ours and the one
+      // nested inside @audius/sdk). They're identical at runtime but tsc
+      // treats them as nominally distinct, so we cast at the boundary.
+      ethWalletClient: walletClient as any
     }
   })
   return _sdk

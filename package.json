@@ -31,7 +31,7 @@
     "@apollo/client": "3.3.7",
     "@audius/harmony": "latest",
     "@audius/eth": "1.0.0",
-    "@audius/sdk": "15.3.1",
+    "@audius/sdk": "14.1.0",
     "@audius/stems": "0.3.10",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
