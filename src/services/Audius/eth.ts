@@ -56,20 +56,17 @@ import {
   Staking,
   TrustedNotifierManager
 } from '@audius/eth'
-// `createSdkWithServices` ships in the @audius/sdk@14.1.0 runtime bundle
-// (dist/index.cjs.js / dist/index.esm.js) but isn't re-exported from the
-// package's top-level `dist/index.d.ts`. We import the runtime symbol from
-// the top level via a property-access cast, and pull the type from the
-// published subpath declaration. (sdk@15.x re-exports the function at the
-// top level but drops `OAUTH_URL`, which the OAuth profile-link flow in
-// useConnectAudiusProfile.ts still imports — 14.1.0 is the newest version
-// that has both.)
-import * as audiusSdk from '@audius/sdk'
-import type { createSdkWithServices as CreateSdkWithServicesFn } from '@audius/sdk/dist/sdk/createSdkWithServices'
-
-const createSdkWithServices = (audiusSdk as unknown as {
-  createSdkWithServices: typeof CreateSdkWithServicesFn
-}).createSdkWithServices
+// In @audius/sdk@14.1.0 `createSdkWithServices` is an internal helper that
+// isn't surfaced as a named export — the runtime symbol exists in the
+// bundle but tree-shakes away when imported through `* as audiusSdk`. The
+// public entry that actually returns it (along with `services.ethPublicClient`
+// / `services.ethWalletClient`) is `sdk({ appName, environment })`, which
+// dispatches through `createSdkWithApiName(config)` to the same factory.
+//
+// We pin sdk to 14.1.0 because sdk@15.x drops the top-level `OAUTH_URL`
+// export that the OAuth profile-link flow (useConnectAudiusProfile.ts)
+// still imports.
+import { sdk } from '@audius/sdk'
 import BN from 'bn.js'
 import {
   createWalletClient,
@@ -83,7 +80,7 @@ import { mainnet } from 'viem/chains'
 
 import type { Address, TxReceipt } from 'types'
 
-type AudiusEthSdk = ReturnType<typeof CreateSdkWithServicesFn>
+type AudiusEthSdk = ReturnType<typeof sdk>
 
 const env = import.meta.env.VITE_ENVIRONMENT as
   | 'development'
@@ -95,7 +92,7 @@ const baseConfig = {
   environment: env
 } as const
 
-let _sdk: AudiusEthSdk = createSdkWithServices(baseConfig)
+let _sdk: AudiusEthSdk = sdk(baseConfig)
 
 /** The current @audius/sdk instance (read-only until `attachSigner` runs). */
 export function getEthSdk(): AudiusEthSdk {
@@ -134,7 +131,7 @@ export function attachSigner({
     chain: mainnet,
     transport: custom(walletProvider)
   })
-  _sdk = createSdkWithServices({
+  _sdk = sdk({
     ...baseConfig,
     services: {
       // viem types come from two node_modules locations (ours and the one
