@@ -97,6 +97,18 @@ const baseConfig = {
 } as const
 
 /**
+ * Idempotent eth reads (eth_call, eth_getLogs, eth_getCode, …) get
+ * deduplicated and cached for this long after settling. View methods that
+ * the dashboard reads here change on user-driven writes, which we
+ * explicitly invalidate via invalidateReadCache() inside writeAndWait().
+ *
+ * Declared before the JSON-RPC-cache wrapper closes over it so the const
+ * is initialized by the time the wrapped `request()` fn actually runs
+ * (avoids any chance of a TDZ error during sdk init).
+ */
+const READ_CACHE_TTL_MS = 30_000
+
+/**
  * Build a batched viem `PublicClient` to inject as `services.ethPublicClient`.
  *
  * The sdk's default `ethPublicClient` uses `http()` with no batching, so a
@@ -117,12 +129,80 @@ function buildBatchedEthPublicClient(): PublicClient {
   // `undefined`; `createPublicClient`'s return widens that — fine at
   // runtime but tsc balks. Type identity isn't important here since this
   // client is only consumed via the sdk's ServicesContainer.
-  return createPublicClient({
+  const client = createPublicClient({
     chain: mainnet,
     transport: http(rpcEndpoint, {
       batch: { batchSize: 100, wait: 16 }
     })
   }) as unknown as PublicClient
+  return wrapWithJsonRpcCache(client)
+}
+
+/**
+ * Wrap a PublicClient's `request` method to deduplicate and short-TTL-cache
+ * idempotent JSON-RPC reads (eth_call, eth_getCode, eth_getLogs,
+ * eth_getBlockByNumber with a concrete block, eth_getTransactionReceipt,
+ * eth_chainId). Methods that depend on chain head (eth_blockNumber,
+ * eth_getBlockByNumber with "latest"/"pending") are passed through.
+ *
+ * This sits *below* the higher-level `read()` cache so it also catches:
+ *   - getContractEvents → eth_getLogs (event reads we issue ourselves)
+ *   - isEoa's getCode → eth_getCode (looped per operator wallet)
+ *   - anything inside the @audius/sdk that bypasses our wrappers
+ *
+ * The two layers complement each other: `read()` deduplicates within a
+ * single Promise.all microtask before constructing the JSON-RPC request;
+ * this layer dedupes across components / re-renders / paths that don't
+ * route through `read()` at all.
+ */
+function wrapWithJsonRpcCache(client: PublicClient): PublicClient {
+  const READ_METHODS = new Set([
+    'eth_call',
+    'eth_getCode',
+    'eth_getLogs',
+    'eth_getBlockByHash',
+    'eth_getBlockByNumber',
+    'eth_getTransactionReceipt',
+    'eth_chainId',
+    'net_version'
+  ])
+  const isLatestBlockQuery = (method: string, params: any): boolean => {
+    if (method !== 'eth_getBlockByNumber') return false
+    const blockTag = Array.isArray(params) ? params[0] : undefined
+    return blockTag === 'latest' || blockTag === 'pending' || blockTag === 'safe'
+  }
+
+  const cache = new Map<string, { promise: Promise<unknown>; expires: number }>()
+  const origRequest = client.request.bind(client)
+
+  ;(client as any).request = async (args: any, opts?: any): Promise<unknown> => {
+    if (!READ_METHODS.has(args.method) || isLatestBlockQuery(args.method, args.params)) {
+      return origRequest(args, opts)
+    }
+    const key = `${args.method}:${JSON.stringify(args.params, (_k, v) =>
+      typeof v === 'bigint' ? `${v}n` : v
+    )}`
+    const now = Date.now()
+    const existing = cache.get(key)
+    if (existing && existing.expires > now) {
+      return existing.promise
+    }
+    const promise = origRequest(args, opts)
+    cache.set(key, { promise, expires: Number.POSITIVE_INFINITY })
+    promise.then(
+      () => {
+        cache.set(key, {
+          promise,
+          expires: Date.now() + READ_CACHE_TTL_MS
+        })
+      },
+      () => {
+        cache.delete(key)
+      }
+    )
+    return promise
+  }
+  return client
 }
 
 let _sdk: AudiusEthSdk = sdk({
@@ -256,7 +336,6 @@ export const contracts = {
  * Callers cast the return value at the boundary — see \`toBN()\` for the
  * bigint -> BN conversion that wrappers apply.
  */
-const READ_CACHE_TTL_MS = 30_000
 type CacheEntry = { promise: Promise<unknown>; expires: number }
 const _readCache = new Map<string, CacheEntry>()
 
