@@ -14,6 +14,7 @@ import { AudiusClient } from '../AudiusClient'
 import {
   asHex,
   contracts,
+  EVENT_QUERY_START_BLOCK,
   getConnectedAccount,
   getEthPublicClient,
   read,
@@ -230,7 +231,7 @@ export default class Delegate {
       ...contracts.delegateManager(),
       eventName,
       args,
-      fromBlock: 0n
+      fromBlock: EVENT_QUERY_START_BLOCK
     } as any)) as unknown as Array<EventLog<TArgs>>
   }
 

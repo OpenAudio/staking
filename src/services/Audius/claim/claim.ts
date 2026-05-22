@@ -7,6 +7,7 @@ import { AudiusClient } from '../AudiusClient'
 import {
   asHex,
   contracts,
+  EVENT_QUERY_START_BLOCK,
   getEthPublicClient,
   read,
   toBN,
@@ -153,7 +154,7 @@ export default class Claim {
       ...contracts.claimsManager(),
       eventName: 'ClaimProcessed',
       args: { _claimer: asHex(claimer) },
-      fromBlock: 0n
+      fromBlock: EVENT_QUERY_START_BLOCK
     } as any)) as unknown as Array<
       Log & {
         args: {

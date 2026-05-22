@@ -292,6 +292,20 @@ export const toBig = (value: BN | bigint | number | string): bigint =>
   typeof value === 'bigint' ? value : BigInt(value.toString())
 
 /**
+ * Lower bound for `getContractEvents({ fromBlock })` calls. The Audius eth
+ * contracts (Staking / DelegateManager / Governance / ServiceProviderFactory /
+ * ClaimsManager) were all deployed in roughly the same window of mainnet
+ * history; the governance dashboard already pins that block via
+ * `VITE_QUERY_PROPOSAL_START_BLOCK`. Reusing it here keeps every event
+ * scan bounded — scanning from block 0 makes the RPC sweep ~10M blocks per
+ * call, which Audius's eth-client (and most providers) heavily rate-limit
+ * or time out on.
+ */
+export const EVENT_QUERY_START_BLOCK: bigint = BigInt(
+  parseInt(import.meta.env.VITE_QUERY_PROPOSAL_START_BLOCK || '0') || 0
+)
+
+/**
  * Project a viem `Block` to the legacy web3.js block shape consumers expect:
  * `bigint` fields (timestamp, number, gasUsed, ...) become regular `number`s.
  *
