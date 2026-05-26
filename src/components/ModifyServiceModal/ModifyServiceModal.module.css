@@ -6,6 +6,7 @@
 }
 
 .btnContainer {
+  margin-top: 16px;
   display: inline-flex;
   justify-content: center;
 }
@@ -20,6 +21,15 @@
 
 .saveBtn {
   margin-left: 8px;
+}
+
+.noChanges {
+  margin-top: 28px;
+  font-family: Avenir Next LT Pro;
+  font-weight: 500;
+  font-size: var(--font-s);
+  line-height: 18px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .confirm {
