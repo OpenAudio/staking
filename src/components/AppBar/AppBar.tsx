@@ -245,8 +245,8 @@ const AppBar: React.FC<AppBarProps> = () => {
   const { walletProvider } = useWeb3ModalProvider()
 
   useEffect(() => {
-    if (isConnected) {
-      resolveAccountConnected(walletProvider)
+    if (isConnected && walletProvider) {
+      resolveAccountConnected?.(walletProvider)
     }
   }, [isConnected, walletProvider])
 
