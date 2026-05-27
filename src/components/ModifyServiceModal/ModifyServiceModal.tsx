@@ -28,8 +28,12 @@ const messages = {
   save: 'Save Changes',
   deregister: 'Deregister Node',
   updateEndpoint: 'Update Service Endpoint',
-  updateWallet: 'Update Delegate Owner Wallet'
+  updateWallet: 'Update Delegate Owner Wallet',
+  noChanges: 'No changes to save.'
 }
+
+const normalizeEndpoint = (endpoint: string) => endpoint.trim()
+const normalizeWallet = (wallet: Address) => wallet.trim().toLowerCase()
 
 type OwnProps = {
   serviceType: ServiceType
@@ -80,11 +84,19 @@ const ModifyServiceModal: React.FC<ModifyServiceModalProps> = ({
     onClick: onOpenDeregister
   } = useModalControls()
 
+  const endpointUpdated =
+    normalizeEndpoint(oldEndpoint) !== normalizeEndpoint(endpoint)
+  const walletUpdated =
+    normalizeWallet(oldDelegateOwnerWallet) !==
+    normalizeWallet(delegateOwnerWallet)
+  const hasChanges = endpointUpdated || walletUpdated
+
   const onRegister = useCallback(() => {
     // TODO: validate each field
-
-    onOpenConfirmation()
-  }, [onOpenConfirmation])
+    if (hasChanges) {
+      onOpenConfirmation()
+    }
+  }, [hasChanges, onOpenConfirmation])
 
   const { status, modifyService, error } = useModifyService(!isConfirmModalOpen)
 
@@ -107,9 +119,9 @@ const ModifyServiceModal: React.FC<ModifyServiceModalProps> = ({
       serviceType,
       spID,
       oldEndpoint,
-      endpoint,
+      normalizeEndpoint(endpoint),
       oldDelegateOwnerWallet,
-      delegateOwnerWallet
+      delegateOwnerWallet.trim()
     )
   }, [
     modifyService,
@@ -122,8 +134,6 @@ const ModifyServiceModal: React.FC<ModifyServiceModalProps> = ({
   ])
 
   let topBox = null
-  const endpointUpdated = oldEndpoint !== endpoint
-  const walletUpdated = oldDelegateOwnerWallet !== delegateOwnerWallet
   if (endpointUpdated && walletUpdated) {
     topBox = (
       <>
@@ -190,12 +200,16 @@ const ModifyServiceModal: React.FC<ModifyServiceModalProps> = ({
           placeholder={messages.delegatePlaceholder}
           className={styles.input}
         />
+        {!hasChanges ? (
+          <div className={styles.noChanges}>{messages.noChanges}</div>
+        ) : null}
         <div className={styles.btnContainer}>
           <Button
             text={messages.save}
             type={ButtonType.PRIMARY}
             className={styles.saveBtn}
             onClick={onRegister}
+            isDisabled={!hasChanges}
           />
         </div>
       </div>

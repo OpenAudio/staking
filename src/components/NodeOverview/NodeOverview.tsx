@@ -333,10 +333,10 @@ const NodeOverview = ({
           </Box>
           <Box pv='s' ph='l'>
             <ServiceDetail label={messages.endpoint} value={endpoint} />
-            {(delegateOwnerWallet || health?.delegateOwnerWallet) && (
+            {delegateOwnerWallet && (
               <ServiceDetail
                 label={messages.nodeWalletAddress}
-                value={delegateOwnerWallet || health.delegateOwnerWallet}
+                value={delegateOwnerWallet}
               />
             )}
             {operatorWallet || health?.operatorWallet ? (
@@ -400,7 +400,7 @@ const NodeOverview = ({
                   isOpen={isOpen}
                   onClose={onClose}
                   defaultDelegateOwnerWallet={
-                    delegateOwnerWallet || health?.delegateOwnerWallet || ''
+                    delegateOwnerWallet || ''
                   }
                   defaultEndpoint={endpoint}
                 />
@@ -421,7 +421,7 @@ const NodeOverview = ({
                   spID={spID}
                   serviceType={serviceType}
                   endpoint={endpoint}
-                  delegateOwnerWallet={health?.delegateOwnerWallet}
+                  delegateOwnerWallet={delegateOwnerWallet}
                 />
               </Box>
             )}
