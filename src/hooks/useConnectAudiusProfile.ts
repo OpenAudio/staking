@@ -5,6 +5,10 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
 
 import { getDashboardWalletUserQueryKey } from 'hooks/useDashboardWalletUsers'
+import {
+  getConnectedAccount,
+  getEthWalletClient
+} from 'services/Audius/eth'
 import { audiusSdk as sdk } from 'services/Audius/sdk'
 import { disableAudiusProfileRefetch } from 'store/account/slice'
 
@@ -95,7 +99,14 @@ export const useConnectAudiusProfile = ({
     const message = `Connecting Audius user @${userHandle} at ${Math.round(
       new Date().getTime() / 1000
     )}`
-    const signature = await window.audiusLibs.web3Manager.sign(message)
+    const account = getConnectedAccount()
+    if (!account) {
+      throw new Error('No connected account; cannot sign Audius profile link')
+    }
+    const signature = await getEthWalletClient().signMessage({
+      account,
+      message
+    })
 
     const walletSignature = { message, signature }
     // Leg 2: Send wallet signature to OAuth popup

@@ -3,6 +3,7 @@ import BN from 'bn.js'
 import { Address, BlockNumber } from 'types'
 
 import { AudiusClient } from '../AudiusClient'
+import { asHex, contracts, read, toBN } from '../eth'
 
 export default class Staking {
   aud: AudiusClient
@@ -11,34 +12,43 @@ export default class Staking {
     this.aud = aud
   }
 
-  getContract() {
-    return this.aud.libs.ethContracts.StakingProxyClient
-  }
-
   /* -------------------- Staking Proxy Client Read -------------------- */
 
   async token(): Promise<Address> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().token()
+    const info = (await read({
+      ...contracts.staking(),
+      functionName: 'token'
+    })) as Address
     return info
   }
 
   async totalStaked(): Promise<BN> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().totalStaked()
-    return info
+    const info = (await read({
+      ...contracts.staking(),
+      functionName: 'totalStaked'
+    })) as bigint
+    return toBN(info)
   }
 
   async supportsHistory(): Promise<boolean> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().supportsHistory()
+    const info = (await read({
+      ...contracts.staking(),
+      functionName: 'supportsHistory'
+    })) as boolean
     return info
   }
 
   async totalStakedFor(account: Address): Promise<BN> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().totalStakedFor(account)
-    return info
+    const info = (await read({
+      ...contracts.staking(),
+      functionName: 'totalStakedFor',
+      args: [asHex(account)]
+    })) as bigint
+    return toBN(info)
   }
 
   async totalStakedForAt(
@@ -46,19 +56,31 @@ export default class Staking {
     blockNumber: BlockNumber
   ): Promise<BN> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().totalStakedForAt(account, blockNumber)
-    return info
+    const info = (await read({
+      ...contracts.staking(),
+      functionName: 'totalStakedForAt',
+      args: [asHex(account), BigInt(blockNumber)]
+    })) as bigint
+    return toBN(info)
   }
 
   async totalStakedAt(blockNumber: BlockNumber): Promise<BN> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().totalStakedAt(blockNumber)
-    return info
+    const info = (await read({
+      ...contracts.staking(),
+      functionName: 'totalStakedAt',
+      args: [BigInt(blockNumber)]
+    })) as bigint
+    return toBN(info)
   }
 
   async isStaker(account: Address): Promise<boolean> {
     await this.aud.hasPermissions()
-    const info = await this.getContract().isStaker(account)
+    const info = (await read({
+      ...contracts.staking(),
+      functionName: 'isStaker',
+      args: [asHex(account)]
+    })) as boolean
     return info
   }
 }

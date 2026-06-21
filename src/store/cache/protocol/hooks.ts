@@ -221,10 +221,13 @@ export const useBlock = (blockNumber: number) => {
   const [block, setBlock] = useState<Block>(null)
   useEffect(() => {
     const fetchBlock = async () => {
-      // TODO: Move this window dependency out
-      const web3 = window.audiusLibs.ethWeb3Manager!.web3
-      const b = await web3.eth.getBlock(blockNumber)
-      setBlock(b)
+      const { getEthPublicClient, toLegacyBlock } = await import(
+        'services/Audius/eth'
+      )
+      const b = await getEthPublicClient().getBlock({
+        blockNumber: BigInt(blockNumber)
+      })
+      setBlock(toLegacyBlock(b))
     }
     fetchBlock()
   }, [blockNumber, setBlock])

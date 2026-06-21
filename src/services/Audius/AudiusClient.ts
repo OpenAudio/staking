@@ -51,7 +51,6 @@ export class AudiusClient {
   Governance: Governance
   Claim: Claim
 
-  libs: any = {}
   setup = setup
 
   _setupPromiseResolve: undefined | (() => void)
@@ -98,7 +97,5 @@ export class AudiusClient {
   static getValidatorMetadata = getValidatorMetadata
   static decodeCallData = decodeCallData
 }
-
-window.AudiusClient = AudiusClient
 
 export default AudiusClient

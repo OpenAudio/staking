@@ -48,30 +48,14 @@ function registerAudiusService(
         spID = res.spID
       }
 
-      // Register the service on chain (solana)
-      try {
-        const senderEthAddress = delegateOwnerWallet || wallet
-        const createSenderPublicReceipt =
-          await aud.libs.Rewards.createSenderPublic({
-            senderEthAddress,
-            operatorEthAddress: wallet,
-            senderEndpoint: endpoint
-          })
-        if (createSenderPublicReceipt.error) {
-          console.error(
-            `Received error with code ${createSenderPublicReceipt.errorCode}`,
-            createSenderPublicReceipt.error
-          )
-          throw new Error(createSenderPublicReceipt.errorCode)
-        }
-      } catch (e) {
-        // Unfortunately, we can't error here because the eth and solana registration
-        // is not atomic. Eth registration has already gone through and we should show
-        // the service as registered from the user persp.
-        // Good news is someone else could register this node as a sender since this
-        // mechanism is permissionless
-        console.error('Failed to create new solana sender', e)
-      }
+      // Note: the legacy AudiusLibs SDK also did a Solana-side
+      // `createSenderPublic` call here to register this node as a sender
+      // in the Solana RewardsManager. That step was wrapped in try/catch
+      // and explicitly tolerated failure — the comment was "someone else
+      // could register this node as a sender since this mechanism is
+      // permissionless". As part of removing @audius/sdk-legacy we drop
+      // the call rather than port the Solana program client; the eth-side
+      // registration above is what makes the node visible on-chain.
 
       // Repull pending transactions
       if (wallet) await dispatch(fetchUser(wallet))
