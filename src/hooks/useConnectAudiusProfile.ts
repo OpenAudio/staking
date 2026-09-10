@@ -7,7 +7,13 @@ import { getDashboardWalletUserQueryKey } from 'hooks/useDashboardWalletUsers'
 import { apiEndpoint } from 'services/Audius/sdk'
 import { disableAudiusProfileRefetch } from 'store/account/slice'
 
-const API_KEY = '2cc593fc814461263d282a84286fd4f72c79562e'
+// Public API key (OAuth client_id) of the Audius developer app that the
+// OAuth popup authorizes. Not a secret: the flow uses PKCE, so there is no
+// client secret. Configure in .env.prod.
+const API_KEY = import.meta.env.VITE_AUDIUS_OAUTH_API_KEY
+if (!API_KEY) {
+  throw new Error('VITE_AUDIUS_OAUTH_API_KEY is not set')
+}
 
 const AUDIUS_URL = import.meta.env.VITE_AUDIUS_URL || 'https://audius.co'
 const OAUTH_BASE_URL = `${AUDIUS_URL}/oauth/auth`
